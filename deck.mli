@@ -54,14 +54,14 @@ type card =
     hp    : int ref;
     atk   : int ref;
     effect: effect;
-    stealh: bool;
+    stealth: bool;
     taunt : bool;
     ctype : ctyp;
     cost  : int;
 }
 
 (* card library with all possible cards *)
-type clist  = card array;
+type clist  = card array
 (* a list of cards to simulate the deck *)
 type deck = card list
 
