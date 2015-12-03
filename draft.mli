@@ -7,7 +7,7 @@ open Hero
 * Given a collection of all possible heros, it chooses one at random and 
 * returns that hero. 
 *)
-val get_rand_hero  : hero array -> hero
+val get_rand_hero  : hero array -> (hero * hero * hero)
 
 (**
 * [select_card choice] returns a user chosen hero from [choice]
@@ -23,7 +23,7 @@ val select_hero  : (hero * hero * hero) -> hero
 * Given a collection of all possible cards, it chooses one at random and 
 * returns that card. 
 *)
-val get_rand_card : card array -> card
+val get_rand_card : card array -> (card * card * card)
 
 (**
 * [select_card choice] returns a user chosen card from [choice]
@@ -39,4 +39,4 @@ val select_card   : (card * card * card) -> card
 * This is the main function that allows the draft to take place. 
 * The user selects from 3 random cards until his deck is built.  
 *)
-val build_deck    : int -> (hero * deck)
+val build_deck    : int -> hero array -> card array -> (hero * deck)
