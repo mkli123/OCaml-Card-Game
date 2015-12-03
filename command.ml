@@ -25,8 +25,10 @@ let rec parse_menu () =
   |x -> Printf.printf "Invalid command\n"; parse_menu ()
 
 let next_word str first : string =
-  let space = String.index str ' ' in
-  String.sub str (space+1) ((String.length str)-(String.length first) - 1);;
+  if(String.contains str ' ') then
+    let sp = String.index str ' ' in
+    String.sub str (sp+1) ((String.length str)-(String.length first) - 1)
+  else ""
 
 (*see if the command inputted is for an attack*)
 let valid_attack str : bool =
