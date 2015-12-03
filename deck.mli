@@ -22,7 +22,7 @@ type etype =
     | Draw        of bool * int
     (* buff all friendly cards hp and atk respectively *)
     | AoeF        of int * int
-    (* buff all enemy cards hp and atk respectively *)
+    (* buff all enemy cards hp and atk respectively *)  
     | AoeE        of int * int
     (* buff all cards on the board hp and atk respectively *)
     | AoeA        of int * int
@@ -41,14 +41,6 @@ type effect = {
 
 }
 
-(** Type of a card
- *  Spell is a spell, while Protoss,Zerg, and Terran cards are minions
- *)
-type ctyp =
-    | Protoss
-    | Zerg
-    | Terran
-    | Spell
 
 (** A record representing all the information about a card.
  *  It contains the anme and basic stats of the card; hp, attack, effect
@@ -56,7 +48,8 @@ type ctyp =
  *  stealth or taunt at any given time.
  *  The effect
  *)
-type card = {
+type card = 
+{
     name  : string;
     hp    : int ref;
     atk   : int ref;
@@ -75,7 +68,7 @@ type deck = card list
 (* [draw] [deck] returns a tuple with the rest of the deck and the top card
  * removed.
  *)
-val draw : deck   -> deck * card
+val draw : deck   -> (deck * card) option
 
 (* [shuffle] [deck] shuffles the deck and returns a randomized card list
  *)
