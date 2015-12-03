@@ -24,6 +24,10 @@ let rec parse_menu () =
   |"help" -> Help
   |x -> Printf.printf "Invalid command\n"; parse_menu ()
 
+(*Returns the second word in the string
+ * - str = the string being split
+ * - first = the first word in the string
+ *)
 let next_word str first : string =
   if(String.contains str ' ') then
     let sp = String.index str ' ' in
@@ -59,8 +63,8 @@ let valid_pcard str : bool =
   let len  = String.length str in
   if(len > 5) then
     let cmd = String.sub str 0 5 in
-    let num = String.trim (next_word str cmd) in
     if(cmd = "pcard") then
+      let num = String.trim (next_word str cmd) in
       try
         let _ = int_of_string num in true
       with
@@ -73,8 +77,8 @@ let valid_hpow str : bool =
   let len  = String.length str in
   if(len > 4) then
     let cmd = String.sub str 0 4 in
-    let num = String.trim (next_word str cmd) in
     if(cmd = "hpow") then
+      let num = String.trim (next_word str cmd) in
       try
         let _ = int_of_string num in true
       with
