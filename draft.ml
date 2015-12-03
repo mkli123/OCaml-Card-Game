@@ -49,7 +49,7 @@ let rec select_hero (hero1,hero2,hero3) : hero =
 	if usrinp = 3 then hero3 else
 	select_hero (hero1,hero2,hero3)
 	with
-	|_ = Printf.prinf "Type in a valid int"; select_hero (hero1,hero2,hero3)
+	|x -> Printf.printf "Type in a valid int"; select_hero (hero1,hero2,hero3)
 
 (**
 * [get_rand_card collection] returns a random card chosen from [collection]
@@ -86,7 +86,7 @@ let rec select_card (card1,card2,card3) : hero =
 	if usrinp = 3 then card3 else
 	select_hero (card1,card2,card3)
 	with
-	|_ = Printf.prinf "Type in a valid int"; select_card (card1,card2,card3)
+	|_ -> Printf.prinf "Type in a valid int"; select_card (card1,card2,card3)
 (**
 * [build_deck size] runs [select_card] until a full deck is created
 *
