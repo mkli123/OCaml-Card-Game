@@ -49,7 +49,7 @@ let rec select_hero (hero1,hero2,hero3) : hero =
 	if usrinp = 3 then hero3 else
 	select_hero (hero1,hero2,hero3)
 	with
-	|_ = Printf.prinf "Type in a valid int"; select_hero (hero1,hero2,hero3)
+	|x -> Printf.printf "Type in a valid int"; select_hero (hero1,hero2,hero3)
 
 (**
 * [get_rand_card collection] returns a random card chosen from [collection]
@@ -59,11 +59,11 @@ let rec select_hero (hero1,hero2,hero3) : hero =
 *)
 let get_rand_card cards : (card*card*card) =
 	let c_size = Array.length cards in 
-	let rand_num = Random.int h_size in 
+	let rand_num = Random.int c_size in 
 	let rand_lst = [rand_num] in 
-	let rand_num2 = get_new_rand rand_lst h_size in 
+	let rand_num2 = get_new_rand rand_lst c_size in 
 	let rand_lst2 = rand_num2::rand_lst in
-	let rand_num3 = get_new_rand rand_lst2 h_size in
+	let rand_num3 = get_new_rand rand_lst2 c_size in
 	(cards.(rand_num),cards.(rand_num2),cards.(rand_num3))
 
 (**
@@ -72,7 +72,7 @@ let get_rand_card cards : (card*card*card) =
 *
 * Allows the user to choose a card to be added to their draft deck 
 *)
-let rec select_card (card1,card2,card3) : hero =
+let rec select_card (card1,card2,card3) : card =
 	let card1str = card_string card1 in
 	let card2str = card_string card2 in 
 	let card3str = card_string card3 in
@@ -84,9 +84,9 @@ let rec select_card (card1,card2,card3) : hero =
 	if usrinp = 1 then card1 else
 	if usrinp = 2 then card2 else
 	if usrinp = 3 then card3 else
-	select_hero (card1,card2,card3)
+	select_card (card1,card2,card3)
 	with
-	|_ = Printf.prinf "Type in a valid int"; select_card (card1,card2,card3)
+	|_ -> Printf.printf "Type in a valid int\n"; select_card (card1,card2,card3)
 (**
 * [build_deck size] runs [select_card] until a full deck is created
 *
