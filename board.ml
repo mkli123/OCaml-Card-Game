@@ -226,12 +226,38 @@ let inputEnd boardState input : board =
 	todo kevin
 
 let inputHPow boardState input : board =
-	let player = if (!boardState.turn mod 2) = 0 then 
-	pTwoHero else pOneHero in match player with
-	|Mage ->
-	|Paladin -> 
-	|Priest ->
-	|Warlock -> 
+    if !boardstate.hUsed = true then
+        Printf.printf "You have already used your hero power this turn!\n"
+    else 
+        let mana = if (!boardState.turn mod 2) = 0 then
+        boardState.pTwoMana.current 
+        else
+        boardState.pOneMana.current in
+        if !mana = 0 then Printf.printf "You don't have enough mana.\n"
+        else
+            let player = if (!boardState.turn mod 2) = 0 then 
+            boardState.pTwoHero else boardState.pOneHero in match player with
+            |Mage ->
+            |Paladin -> let index = indexOpening in 
+                            if index = 8 then 
+                                Printf.printf "Your board is full!\n"
+                            else let new_card =
+                            {name = "Silver Hand Recruit";
+                            cost = 1;
+                            hp = ref 1;
+                            atk = ref 1;
+                            effect = {description = "");
+                                      efftype = None};
+                            stealth = ref false;
+                            taunt   = false;
+                            ctype   = Zerg;} in 
+                            if (!boardState.turn mod 2) = 0 then 
+                            boardState.pTwoBoard.(index) <- Some(new_card);
+                            boardState.pTwoMana.current:=
+                                (!boardState.pTwoMana.current-2)
+                            else boardState.pOneBoard.(index) <- Some(new_card)
+            |Priest ->
+            |Warlock ->  
 
 (* takes in [ind] index of card you want, [lst] hand you draw from
     acc is the start index 
