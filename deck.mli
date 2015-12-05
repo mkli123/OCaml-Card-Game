@@ -8,11 +8,11 @@ type ctyp =
     | Terran
     | Spell
 
-(** etype is the type of the effect where None means no 
+(** etype is the type of the effect where None means no
  * deathrattle or battlecry. Battlecry effects trigger upon
  * being played and Deathrattle triggers upon death of card
  *)
-type etype = 
+type etype =
     | None
     (* effect happens when card is played *)
     | BattleCry   of etype
@@ -22,7 +22,7 @@ type etype =
     | Draw        of bool * int
     (* buff all friendly cards hp and atk respectively *)
     | AoeF        of int * int
-    (* buff all enemy cards hp and atk respectively *)  
+    (* buff all enemy cards hp and atk respectively *)
     | AoeE        of int * int
     (* buff all cards on the board hp and atk respectively *)
     | AoeA        of int * int
@@ -33,7 +33,7 @@ type etype =
 
 (** The effect of a given card can have different types
  *
- * 
+ *
  *)
 type effect = {
     description : string;
@@ -48,7 +48,7 @@ type effect = {
  *  stealth or taunt at any given time.
  *  The effect
  *)
-type card = 
+type card =
 {
     name  : string;
     hp    : int ref;
@@ -73,3 +73,7 @@ val draw : deck   -> (deck * card) option
 (* [shuffle] [deck] shuffles the deck and returns a randomized card list
  *)
 val shuffle: deck -> deck
+
+val empty_card :unit -> card
+
+val card_string: card -> string
