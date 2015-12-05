@@ -136,37 +136,39 @@ let inputAttack boardState (c,e) : unit =
     let invalid_board () = Printf.printf "Invalid Attack...\n";in
     try 
         if (!boardState.turn) mod 2 = 1 then begin
-            let minion = boardState.pOneBoard).(c) in
+            let m = boardState.pOneBoard).(c) in
             let t_only = check_taunt boardState.pTwoBoard in
-            if !((!boardState.pOneBoard).(c).hp) <=0 then invalid_board ()
+            if boardState.pOneBoard.(c) = None then invalid_board ()
             else
                 if e = 200 && (not t) then begin
-                    if !(boardState.pOneBoard).(c).hp <= 0 invalid_board ()
-                    else boardState.pTwoHP := !boardState.pTwoHP - minion.atk; 
+                    if boardState.pOneBoard.(c) = None then invalid_board ()
+                    else boardState.pTwoHP := !boardState.pTwoHP - get_atk_c m; 
                 end 
-                else if !(t_only.(e).hp) <=0 then invalid_board ()
-                else let d1 = minion.atk in
-                     let d2 = !(t_only.(e).atk) in
-                     let h1 = !((!boardState.pOneBoard).(c).hp) in
-                     let h2 = !((!boardState.pTwoBoard).(e).hp) in
-                     (!boardState.pOneBoard).(c).hp := h1 - d2;
-                     (!boardState.pTwoBoard).(e).hp := h2 - d1;
+                else if t_only.(e) = None then invalid_board ()
+                else let d1 = get_atk_c m in
+                     let d2 = get_atk_c t_only.(e) in
+                     let h1 = get_hp_c m in
+                     let h2 = get_hp_c t_only.(e) in
+                    match boardState.pOneBoard.(c),boardState.pTwoBoard.(e) with
+                     | Some(x),Some(y) -> x.hp := h1 - d2; y.hp := h2 - d1;
+                     | _               -> invalid_board ()
         end else
-            let minion = (!boardState.pTwoBoard).(c) in
-            let t_only = check_taunt !boardState.pOneBoard in
-            if !()!boardState.pTwoBoard).(c).hp)<=0 then invalid_board ()
-        else   
+            let m = boardState.pTwoBoard).(c) in
+            let t_only = check_taunt boardState.pOneBoard in
+            if boardState.pTwoBoard.(c) = None then invalid_board ()
+            else
                 if e = 100 && (not t) then begin
-                    if !((boardState.pTwoBoard).(c).hp) <= 0 invalid_board ()
-                    else boardState.pOneHP := !boardState.pOneHP - minion.atk; 
+                    if boardState.pTwoBoard.(c) = None then invalid_board ()
+                    else boardState.pOneHP := !boardState.pOneHP - get_atk_c m; 
                 end 
-                else if !(t_only.(e).hp) <=0 then invalid_board ()
-                else let d1 = minion.atk in
-                     let d2 = !(t_only.(e).atk)in
-                     let h1 = !((!boardState.pTwoBoard).(c).hp) in
-                     let h2 = !((!boardState.pOneBoard).(e).hp) in
-                     (!boardState.pTwoBoard).(c).hp := h1 - d2;
-                     (!boardState.pOneBoard).(e).hp := h2 - d1;
+                else if t_only.(e) = None then invalid_board ()
+                else let d1 = get_atk_c m in
+                     let d2 = get_atk_c t_only.(e) in
+                     let h1 = get_hp_c m in
+                     let h2 = get_hp_c t_only.(e) in
+                    match boardState.pTwoBoard.(c),boardState.pOneBoard.(e) with
+                     | Some(x),Some(y) -> x.hp := h1 - d2; y.hp := h2 - d1;
+                     | _               -> invalid_board ()
 
     with
     | _ -> invalid_board ()
