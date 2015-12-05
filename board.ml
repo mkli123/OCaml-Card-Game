@@ -245,12 +245,28 @@ let inputHPow boardState input : board =
         boardState.pTwoMana.current 
         else
         boardState.pOneMana.current in
-        if !mana = 0 then Printf.printf "You don't have enough mana.\n"
+        if !mana <= 0 then Printf.printf "You don't have enough mana.\n"
         else
             let player = if (!boardState.turn mod 2) = 0 then 
-            boardState.pTwoHero else boardState.pOneHero in match player with
-            |Mage ->
-            |Paladin -> let index = indexOpening in 
+            boardState.pTwoHero else boardState.pOneHero in 
+            let moded = (!boardState.turn mod 2) in
+            match player,input with
+            |Mage,Some x -> if x = 100 then (if moded = 0 then boardState.pTwoHP:=(!boardState.pTwoHP-1);boardState.pTwoMana.current:=
+                                (!boardState.pTwoMana.current-2) else boardState.pOneHP:=(!boardState.pOneHP-1);boardState.pOneMana.current:=
+                                (!boardState.pOneMana.current-2)) else if x>=0 && x<7 then( let brd = (if moded = 0 then boardState.pTwoBoard else boardState.pOneBoard) in
+                                let no_stealth = rm_stealth brd in (if no_stealth.(x) = None then 
+                                        Printf.printf "That's an invalid Target. \n" else (if !brd.(x).hp-1 = 0 then brd.(x)<-None else brd.(x).hp:= (!brd.(x).hp - 1));
+                                        (if moded = 0 then boardState.pTwoMana.current:=(!boardState.pTwoMana.current-2) else  
+                                            boardState.pOneMana.current:=(!boardState.pOneMana.current-2)))) 
+                                else if x>=10 && x<17 then ( let brd = (if moded = 0 then boardState.pOneBoard else boardState.pTwoBoard) in
+                                let no_stealth = rm_stealth brd in (if no_stealth.(x-10) = None then 
+                                        Printf.printf "That's an invalid Target. \n" else (if !brd.(x-10).hp-1 = 0 then brd.(x-10)<-None else brd.(x-10).hp:= (!brd.(x-10).hp - 1));
+                                        (if moded = 0 then boardState.pTwoMana.current:=(!boardState.pTwoMana.current-2) else  
+                                            boardState.pOneMana.current:=(!boardState.pOneMana.current-2))))
+                                else if x = 200 then (if moded = 0 then boardState.pOneHP:=(!boardState.pOneHP-1);boardState.pTwoMana.current:=
+                                (!boardState.pTwoMana.current-2) else boardState.pTwoHP:=(!boardState.pTwoHP-1);boardState.pOneMana.current:=
+                                (!boardState.pOneMana.current-2)) else Printf.printf "Invalid Target.\n"
+            |Paladin, _ -> let index = indexOpening in 
                             if index = 8 then 
                                 Printf.printf "Your board is full!\n"
                             else let new_card =
@@ -268,8 +284,26 @@ let inputHPow boardState input : board =
                             boardState.pTwoMana.current:=
                                 (!boardState.pTwoMana.current-2)
                             else boardState.pOneBoard.(index) <- Some(new_card)
-            |Priest ->
-            |Warlock ->  
+            |Priest, Some x -> if x = 100 then (if moded = 0 then boardState.pTwoHP:=(!boardState.pTwoHP+2);boardState.pTwoMana.current:=
+                                (!boardState.pTwoMana.current-2) else boardState.pOneHP:=(!boardState.pOneHP+2);boardState.pOneMana.current:=
+                                (!boardState.pOneMana.current-2)) else if x>=0 && x<7 then( let brd = (if moded = 0 then boardState.pTwoBoard else boardState.pOneBoard) in
+                                let no_stealth = rm_stealth brd in (if no_stealth.(x) = None then 
+                                        Printf.printf "That's an invalid Target. \n" else brd.(x).hp:= (!brd.(x).hp + 2));
+                                        (if moded = 0 then boardState.pTwoMana.current:=(!boardState.pTwoMana.current-2) else  
+                                            boardState.pOneMana.current:=(!boardState.pOneMana.current-2)))) 
+                                else if x>=10 && x<17 then ( let brd = (if moded = 0 then boardState.pOneBoard else boardState.pTwoBoard) in
+                                let no_stealth = rm_stealth brd in (if no_stealth.(x-10) = None then 
+                                        Printf.printf "That's an invalid Target. \n" else brd.(x-10).hp:= (!brd.(x-10).hp + 2));
+                                        (if moded = 0 then boardState.pTwoMana.current:=(!boardState.pTwoMana.current-2) else  
+                                            boardState.pOneMana.current:=(!boardState.pOneMana.current-2))))
+                                else if x = 200 then (if moded = 0 then boardState.pOneHP:=(!boardState.pOneHP+2);boardState.pTwoMana.current:=
+                                (!boardState.pTwoMana.current-2) else boardState.pTwoHP:=(!boardState.pTwoHP+2);boardState.pOneMana.current:=
+                                (!boardState.pOneMana.current-2)) else Printf.printf "Invalid Target.\n"
+            |Warlock, _ -> draw_card boardState; (if moded = 0 then boardState.pTwoHP:=(!boardState.pTwoHP-2);boardState.pTwoMana.current:=
+                                (!boardState.pTwoMana.current-2) else boardState.pOneHP:=(!boardState.pOneHP-2);boardState.pOneMana.current:=
+                                (!boardState.pOneMana.current-2))
+            |_,_ -> Printf.printf "Invalid Hpow command.\n" 
+
 
 (* takes in [ind] index of card you want, [lst] hand you draw from
     acc is the start index 
