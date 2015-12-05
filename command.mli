@@ -27,7 +27,7 @@ type game_command =
 |Attack of (int * int)
 |End
 |HPow of int option
-|PCard of int 
+|PCard of int * int option
 |LookH
 |Concede
 |Help

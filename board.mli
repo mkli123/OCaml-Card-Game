@@ -40,8 +40,8 @@ type board = {
 	pOneDeck  : deck ref;
 	pTwoDeck  : deck ref;
 	hUsed     : bool ref;
-	pOneMana  : mana ref;
-	pTwoMana  : mana ref;
+	pOneMana  : mana;
+	pTwoMana  : mana;
 	turn      : int ref;
 }
 

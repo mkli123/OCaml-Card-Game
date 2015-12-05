@@ -100,7 +100,13 @@ let indexOpening pBoard: int =
 let printBoard boardState : unit =
 	todo kevin
 
-(* returns array with  *)
+(* resolve effect , return None if something went wrong*)
+let resolve_DR bS e: board option =
+
+let resolve_BC bS e : board option = 
+
+
+(* returns array with stealth minions removed*)
 let rm_stealth brd = 
     let f x = 
         match x with
@@ -185,12 +191,37 @@ let inputHPow boardState input : board =
 	|Priest ->
 	|Warlock -> 
 
-let inputPCard boardState input : board = 
-    let get_c blst ind c =
-    if blst.(ind).hp < 0 then get_c blst (ind + 1)
-    let get_e blst ind c = 
-        if blst.(ind).hp < 0 then 
-    todooooo
+(* takes in [ind] index of card you want, [lst] hand you draw from
+    acc is the start index 
+    returns: (card,newhand)*)
+let get_crd ind lst acc =
+    match lst with
+    | []                  -> (empty_card (),[])
+    | h::t with ind = acc -> 
+        let fil x = h <> t in
+        (h,List.filter fil lst)
+    | h::t                -> get_crd ind lst (acc + 1)
+
+let inputPCard bS (x,op) : board = 
+    let invalid_i () = Printf.printf "Invalid play...\n"; in
+    let who = bS.turn mod 2 = 1 in
+    let brd = if who then bS.pOneBoard else bS.pTwoBoard
+    let ind = indexOpening brd
+    in
+    (* check if card is in hand *)
+    let hnd       = if who then bS.pOneHand else bS.pTwoHand in
+    let temp_hand = !hnd in
+    let pMana = if who then bS.pOneMana else bS.pTwoMana in
+    if x >= List.length (!hnd) then invalid_i () else
+    let new_hand = get_crd x temp_hand 0 in
+    if (fst new_hand).cost > !pMana.current then invalid_i () else
+    match (fst new_hand).ctype with
+    | Spell ->
+        match resolve_e 
+    | _     ->
+
+
+
 
 let inputLookH boardState : unit =
 	let player = if (!boardState.turn mod 2) = 0 then 
