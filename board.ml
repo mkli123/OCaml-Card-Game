@@ -49,8 +49,10 @@ type board = {
 (* ******************************************************************** *)
 
 (* takes in deck ref and updates deck
-    returns hand, updates the deck ref 
-    to reflect n draws
+	returns hand, updates the deck ref 
+	to reflect n draws
+	TODO: ADD CARD BURN EDIT SPEC TO TAKE IN HAND
+
 *)
 let draw_player d n = 
 	let rec d1 n dk h acc =
@@ -85,6 +87,15 @@ let makeBoard (h1,d1) (h2,d2) m =
 	pTwoMana  = {max = ref 0; current = ref 0;};
 	turn      = ref 0;
 	}
+(*returns the first possible place to put a new minion. 8 if full*)
+let indexOpening pBoard: int = 
+	let count = ref 8 in let a =
+	for x = 0 to Array.length pBoard 
+	do 
+		if pBoard.(x).hp <= 0 then 
+		if x<(!count) then count:=x
+	done in 
+	!count
 
 let printBoard boardState : unit =
 	todo kevin
@@ -126,7 +137,12 @@ let inputEnd boardState input : board =
 	todo kevin
 
 let inputHPow boardState input : board =
-	todo kevin
+	let player = if (boardState.turn mod 2) = 0 then 
+	pTwoHero else pOneHero in match player with
+	|Mage ->
+	|Paladin -> 
+	|Priest ->
+	|Warlock -> 
 
 let inputPCard boardState input : board = 
     let get_c blst ind c =
