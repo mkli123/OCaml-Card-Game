@@ -1,1 +1,27 @@
-Name,Cost,HP,ATK,Eff Desc,Effect,Stealth,Taunt,CtypeTestbot,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,ProtossTestbot2,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,ProtossTestbot3,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,ProtossTestbot4,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,ProtossTestbot5,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,ProtossTestbot6,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,ProtossTestbot7,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,Protoss
+Name,Cost,HP,ATK,Eff Desc,Effect,Stealth,Taunt,Ctype
+Testbot,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,Protoss
+Testbot2,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,Protoss
+Testbot3,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,Protoss
+Testbot4,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,Protoss
+Testbot5,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,Protoss
+Testbot6,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,Protoss
+Testbot7,1,1,1,BattleCry Increase minion attack by 1,battlecry bone 1 0,FALSE,FALSE,Protoss
+Krugs,7,7,7,,none,FALSE,FALSE,Zerg
+Lu Comma Justin,2,3,2,,none,FALSE,FALSE,Terran
+Justin's Pudge,3,2,5,,none,FALSE,FALSE,Protoss
+Dan Liang's Luna,8,2,8,,none,FALSE,FALSE,Zerg
+Kevin's Teemo,1,3,1,,none,TRUE,FALSE,Terran
+NineOuttaTen,9,10,9,,none,FALSE,FALSE,Protoss
+Mike Kuan's Ama,10,12,12,,none,FALSE,FALSE,Zerg
+John's Glasses,4,4,3,,none,FALSE,TRUE,Terran
+Ross's Puff,5,5,5,,none,FALSE,TRUE,Protoss
+Jason's Falcon,2,8,0,,none,FALSE,FALSE,Zerg
+Kurs,0,1,1,,none,FALSE,FALSE,Terran
+Matt's Roy,3,5,3,A Skilled Roy Can Beat Any Fox…,none,TRUE,FALSE,Protoss
+Hunter's Sheik,6,6,7,,none,FALSE,FALSE,Zerg
+Alan's Gates,2,4,1,,none,FALSE,TRUE,Terran
+Let Kekt,,,,,none,FALSE,FALSE,Protoss
+,,,,,none,FALSE,FALSE,Zerg
+,,,,,none,FALSE,FALSE,Terran
+,,,,,none,FALSE,FALSE,Protoss
+Justin's Mech Zeus Tho,3,99,99,Heal Everyone for 2,aoea 2 0,FALSE,FALSE,Spell
