@@ -11,11 +11,11 @@ type ctyp =
     | Terran
     | Spell
 
-(** etype is the type of the effect where None means no 
+(** etype is the type of the effect where None means no
  * deathrattle or battlecry. Battlecry effects trigger upon
  * being played and Deathrattle triggers upon death of card
  *)
-type etype = 
+type etype =
     | None
     (* effect happens when card is played *)
     | BattleCry   of etype
@@ -25,7 +25,7 @@ type etype =
     | Draw        of bool * int
     (* buff all friendly cards hp and atk respectively *)
     | AoeF        of int * int
-    (* buff all enemy cards hp and atk respectively *)  
+    (* buff all enemy cards hp and atk respectively *)
     | AoeE        of int * int
     (* buff all cards on the board hp and atk respectively *)
     | AoeA        of int * int
@@ -36,7 +36,7 @@ type etype =
 
 (** The effect of a given card can have different types
  *
- * 
+ *
  *)
 type effect = {
     description : string;
@@ -51,7 +51,7 @@ type effect = {
  *  stealth or taunt at any given time.
  *  The effect
  *)
-type card = 
+type card =
 {
     name  : string;
     hp    : int ref;
@@ -70,14 +70,13 @@ type deck = card list
 
 
 (******************************************************************************)
- 
+
 (* let cardlist_csv_name = Sys.argv.(1)*)
 
-let split s = 
-    let open Core.Std in
-    String.split s ' '
+let split s =
+    Core.Std.String.split s ' '
 (* get_ctype s extracts card type from the string value *)
-let get_ctype s = 
+let get_ctype s =
     match s with
     | "protoss" -> Protoss
     | "zerg"    -> Zerg
@@ -91,15 +90,15 @@ let rec parse_effect s =
     let infolst = split lows in
     match List.hd infolst with
     | "none"      -> None
-    | "battlecry" -> 
+    | "battlecry" ->
         let spc = (String.index lows ' ' ) + 1 in
-        let len = (String.length lows) - spc in  
+        let len = (String.length lows) - spc in
         BattleCry(parse_effect (String.sub lows spc len))
-    | "deathrattle" -> 
+    | "deathrattle" ->
         let spc = (String.index lows ' ' ) + 1 in
         let len = (String.length lows) - spc in
         DeathRattle(parse_effect (String.sub lows spc len))
-    | "draw" -> 
+    | "draw" ->
         Draw(bool_of_string  (List.nth infolst 1),
             int_of_string  (List.nth infolst 2))
     | "aoef" ->
@@ -111,10 +110,10 @@ let rec parse_effect s =
     | "aoea" ->
         AoeA(int_of_string  (List.nth infolst 1),
              int_of_string  (List.nth infolst 2))
-    | "btyp" -> 
+    | "btyp" ->
         let ct = List.nth infolst 1 in
         BType(get_ctype ct,
-              int_of_string  (List.nth infolst 2), 
+              int_of_string  (List.nth infolst 2),
               int_of_string  (List.nth infolst 3))
     | "bone" ->
         BOne(int_of_string  (List.nth infolst 1),
@@ -140,19 +139,20 @@ let rec make_library clst cinfo =
         make_library new_clst t
 
 let empty_card () =
-    {name = "emptycard";hp = ref 0; atck = ref 0;
-     effect = None; stealth = ref false; taunt = false; ctype = Zerg; }
+    {name = "emptycard";hp = ref 0; atk = ref 0;
+     effect = {description=""; efftype=None}; stealth = ref false;
+     taunt = false; ctype = Zerg;cost = -2 }
 
 let import_cardlist f =
     let card_info = List.tl (Csv.load f) in
     make_library [] card_info
 
-let draw d : (card * deck) option =
+let draw d : (deck *card) option =
     match d with
     | []   -> None
-    | h::t -> Some(h,t)
+    | h::t -> Some(t,h)
 
-let shuffle d = 
+let shuffle d =
     let rec shuf d c =
         let n = Array.length d in
         if c = 0 then d
