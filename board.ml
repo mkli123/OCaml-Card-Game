@@ -1,8 +1,8 @@
-open deck
-open hero
-open ai
-open draft
-open command
+open Deck
+open Hero
+open Ai
+open Draft
+open Command
 
 (* keep track of current mana available to player at a given time
  * max is the mana you start with next turn
@@ -40,8 +40,8 @@ type board = {
     pOneDeck  : deck ref;
     pTwoDeck  : deck ref;
     hUsed     : bool ref;
-    pOneMana  : mana ref;
-    pTwoMana  : mana ref;
+    pOneMana  : mana;
+    pTwoMana  : mana;
     turn      : int ref;
 }
 
@@ -78,8 +78,8 @@ let makeBoard (h1,d1) (h2,d2) m =
 	pTwoHP    = ref 30;
 	pOneHand  = ref (draw_player pOneD 3);
 	pTwoHand  = ref (draw_player pTwoD 4);
-	pOneBoard = make 7 (None);
-	pTwoBoard = make 7 (None);
+	pOneBoard = Array.make 7 (None);
+	pTwoBoard = Array.make 7 (None);
 	pOneDeck  = pOneD;
 	pTwoDeck  = pTwoD;
 	hUsed     = ref false;
@@ -262,7 +262,7 @@ let inputEnd BS : unit =
     let plyrMana = if chk then BS.pOneMana else BS.pTwoMana in
     if (!plyrMana.max) < 10 then plyrMana.max := (!plyrMana.max) + 1;
     plyrMana.current := !plyrMana.max
-    
+
 let inputHPow boardState input : board =
     if !boardstate.hUsed = true then
         Printf.printf "You have already used your hero power this turn!\n"
