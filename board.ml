@@ -8,8 +8,8 @@ open command
  * max is the mana you start with next turn
  *)
 type mana  = {
-	max     : int ref;
-	current : int ref;
+    max     : int ref;
+    current : int ref;
 }
 
 (* mode defines whether or not it is player vs player or player vs ai *)
@@ -28,29 +28,29 @@ type mode   = |VSai |PVP
  * turn is 0 or 1 depending on who's player's turn it is
  *)
 type board = {
-	mode      : mode;
-	pOneHero  : hero;
-	pTwoHero  : hero;
-	pOneHP    : int ref;
-	pTwoHP    : int ref;
-	pOneHand  : card list ref;
-	pTwoHand  : card list ref;	
-	pOneBoard : card list ref;
-	pTwoBoard : card list ref;
-	pOneDeck  : deck ref;
-	pTwoDeck  : deck ref;
-	hUsed     : bool ref;
-	pOneMana  : mana ref;
-	pTwoMana  : mana ref;
-	turn      : int ref;
+    mode      : mode;
+    pOneHero  : hero;
+    pTwoHero  : hero;
+    pOneHP    : int ref;
+    pTwoHP    : int ref;
+    pOneHand  : card list ref;
+    pTwoHand  : card list ref;  
+    pOneBoard : card list ref;
+    pTwoBoard : card list ref;
+    pOneDeck  : deck ref;
+    pTwoDeck  : deck ref;
+    hUsed     : bool ref;
+    pOneMana  : mana ref;
+    pTwoMana  : mana ref;
+    turn      : int ref;
 }
 
 
 (* ******************************************************************** *)
 
 (* takes in deck ref and updates deck
-	returns hand, updates the deck ref 
-	to reflect n draws
+    returns hand, updates the deck ref 
+    to reflect n draws
 *)
 let draw_player d n = 
 	let rec d1 n dk h acc =
@@ -89,8 +89,38 @@ let makeBoard (h1,d1) (h2,d2) m =
 let printBoard boardState : unit =
 	todo kevin
 
-let inputAttack boardSate input : board =
-	todo Mike
+let rm_stealth brd = Array.map (fun x -> !x.stealth = true) brd
+
+let inputAttack boardState (c,e) : board = 
+    let t = ref false in
+    let f x = if x.taunt = true && x.stealth = true then false 
+                else if x.taunt = true then t := true; true else false
+    in
+    (* sets t to true if there is a taunt and returns array of only
+        taunted stuff then *)
+    let check_taunt brd = let x = Array.map f brd in
+        if !t then x else rm_stealth brd
+in
+    let invalid_board () = Printf.printf "Invalid Attack...\n"; boardState in
+    try 
+        if (!boardState.turn) mod 2 = 1 then begin
+            if e = 200 && (not t) then begin
+                try if boardState.pOneBoard.(c).hp <= 0 invalid_board ()
+                else
+
+
+            end else
+                try 
+                 (boardState.(e).hp <= 0)
+                    then invalid_board ()
+                    else
+        
+
+                with
+                | _ -> invalid_board ()
+        end else
+            if e = 100 then
+            else
 
 let inputEnd boardState input : board =
 	todo kevin
@@ -98,8 +128,12 @@ let inputEnd boardState input : board =
 let inputHPow boardState input : board =
 	todo kevin
 
-let inputPCard boardState input : board =
-	todo mike
+let inputPCard boardState input : board = 
+    let get_c blst ind c =
+    if blst.(ind).hp < 0 then get_c blst (ind + 1)
+    let get_e blst ind c = 
+        if blst.(ind).hp < 0 then 
+    todooooo
 
 let inputLookH boardState : unit =
 	let player = if (boardState.turn mod 2) = 0 then 
@@ -139,3 +173,4 @@ let actualGame (h1,d1) (h2,d2) m =
 		match boardState.mode with
 		| PVP -> 
 	in
+
