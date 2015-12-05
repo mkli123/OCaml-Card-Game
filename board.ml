@@ -119,7 +119,6 @@ let draw_card BS n : unit =
     done
 
 let printBoard boardState : unit =
-	let printBoard boardState : unit =
     let pTurn = !boardState.turn mod 2 in
     let chk = pTurn = 1 in
     let plyr = if chk then boardState.pOneHero else boardState.pTwoHero in
