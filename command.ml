@@ -13,7 +13,9 @@ type game_command =
 |Concede
 |Help
 
-(*parse the input for the menu options*)
+(*parses the input for the menu options and if it is not a valid input
+ *it tells the user and asks for input again
+ *)
 let rec parse_menu () =
   let cmd = read_line () in
   let str = String.lowercase (String.trim cmd) in
@@ -24,7 +26,7 @@ let rec parse_menu () =
   |"help" -> Help
   |x -> Printf.printf "Invalid command\n"; parse_menu ()
 
-(*Returns the second word in the string
+(*Returns a string that is the second word in the input string
  * - str = the string being split
  * - first = the first word in the string
  *)
@@ -34,7 +36,7 @@ let next_word str first : string =
     String.sub str (sp+1) ((String.length str)-(String.length first) - 1)
   else ""
 
-(*see if the command inputted is for an attack*)
+(*returns a bool telling if the command inputted is for an attack*)
 let valid_attack str : bool =
   let len  = String.length str in
   if(len > 6) then
@@ -58,7 +60,7 @@ let valid_attack str : bool =
     else false
   else false
 
-(*see if the command inputted is for playing a card*)
+(*returns a bool telling if the command inputted is for playing a card*)
 let valid_pcard str : bool =
   let len  = String.length str in
   if(len > 5) then
@@ -88,7 +90,7 @@ let valid_pcard str : bool =
     else false
   else false
 
-(*see if the command inputted is for hero power*)
+(*returns a bool telling if the command inputted is for hero power*)
 let valid_hpow str : bool =
   let len  = String.length str in
   if(len > 4) then
@@ -102,7 +104,9 @@ let valid_hpow str : bool =
     else false
   else false
 
-(*pares the input for the game commands*)
+(*parses the input for the game commands and if it is not a valid command
+ *it tells the user and asks for input again
+ *)
 let rec parse_game () =
   let cmd = read_line () in
   let str = String.lowercase (String.trim cmd) in
@@ -117,7 +121,9 @@ let rec parse_game () =
   |s when (valid_hpow str) -> do_hpow str
   |_ -> Printf.printf "Invalid command\n"; parse_game ()
 
-(*output the attack command*)
+(*output the attack command if input is valid attack input but ask for input
+ *again if command is not a valid command
+ *)
 and do_attack str =
   let len  = String.length str in
   if(len > 6) then
@@ -145,7 +151,9 @@ and do_attack str =
     else parse_game ()
   else parse_game ()
 
-(*output the pcard command*)
+(*output the pcard command if input is valid pcard input but ask for input again
+ *if command is not a valid command
+ *)
 and do_pcard str =
   let len  = String.length str in
   if(len > 5) then
@@ -182,7 +190,9 @@ and do_pcard str =
     else parse_game ()
   else parse_game ()
 
-(*output the hpow command*)
+(*output the hpow command if input is valid hpow input but ask for input again
+ *if command is not a valid command
+ *)
 and do_hpow str =
   let len  = String.length str in
   if(len > 4) then
