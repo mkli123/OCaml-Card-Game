@@ -8,7 +8,7 @@ type game_command =
 |Attack of (int * int)
 |End
 |HPow of int option
-|PCard of int
+|PCard of int * int option
 |LookH
 |Concede
 |Help
@@ -65,10 +65,26 @@ let valid_pcard str : bool =
     let cmd = String.sub str 0 5 in
     if(cmd = "pcard") then
       let num = String.trim (next_word str cmd) in
-      try
-        let _ = int_of_string num in true
-      with
-      |x -> false
+      if(String.contains num ' ') then
+        let space = String.index num ' ' in
+        let si1 = String.sub num 0 space in
+        let si2 = String.trim (next_word num si1) in
+        let bi1 =
+          try
+            let _ = int_of_string si1 in true
+          with
+          |x -> false in
+        let bi2 =
+          try
+            let _ = int_of_string si2 in true
+          with
+          |x -> false in
+        (bi1 && bi2)
+      else
+        try
+          let _ = int_of_string num in true
+        with
+        |x -> false
     else false
   else false
 
@@ -134,15 +150,35 @@ and do_pcard str =
   let len  = String.length str in
   if(len > 5) then
     let cmd = String.sub str 0 5 in
-    let num = String.trim (next_word str cmd) in
     if(cmd = "pcard") then
-      let bi =
+      let num = String.trim (next_word str cmd) in
+      if(String.contains num ' ') then
+        let space = String.index num ' ' in
+        let si1 = String.sub num 0 space in
+        let si2 = String.trim (next_word num si1) in
+        let bi1 =
+          try
+            let _ = int_of_string si1 in true
+          with
+          |x -> false in
+        let bi2 =
+          try
+            let _ = int_of_string si2 in true
+          with
+          |x -> false in
+        if (bi1 && bi2) then
+          let i1 = int_of_string si1 in
+          let i2 = int_of_string si2 in
+          PCard (i1, Some i2)
+        else parse_game ()
+      else
+        let bi =
         try
           let _ = int_of_string num in true
         with
         |x -> false in
-      if(bi) then PCard (int_of_string num)
-      else parse_game ()
+        if(bi) then PCard ((int_of_string num), None)
+        else parse_game ()
     else parse_game ()
   else parse_game ()
 
