@@ -173,6 +173,7 @@ let rm_stealth brd =
         match x with
         | None    -> None
         | Some(c) -> if !c.stealth then None else Some(c)
+    in    
     Array.map f brd
 
 let get_atk_c co = 
