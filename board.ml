@@ -190,7 +190,8 @@ let inputAttack boardState (c,e) : unit =
             else
                 if e = 200 && (not t) then begin
                     if boardState.pOneBoard.(c) = None then invalid_board ()
-                    else boardState.pTwoHP := !boardState.pTwoHP - get_atk_c m; 
+                    else boardState.pTwoHP := !boardState.pTwoHP - get_atk_c m;
+                         boardState.pOneBoard.(c).stealth := false; 
                 end 
                 else if t_only.(e) = None then invalid_board ()
                 else let d1 = get_atk_c m in
@@ -199,6 +200,11 @@ let inputAttack boardState (c,e) : unit =
                      let h2 = get_hp_c t_only.(e) in
                     match boardState.pOneBoard.(c),boardState.pTwoBoard.(e) with
                      | Some(x),Some(y) -> x.hp := h1 - d2; y.hp := h2 - d1;
+                                          x.stealth := false;
+                                          if x.hp <= 0 then 
+                                          boardState.pOneBoard.(c) <- None;
+                                          if y.hp <= 0 then
+                                          boardState.pTwoBoard.(e) <- None;
                      | _               -> invalid_board ()
         end else
             let m = boardState.pTwoBoard).(c) in
@@ -207,7 +213,8 @@ let inputAttack boardState (c,e) : unit =
             else
                 if e = 100 && (not t) then begin
                     if boardState.pTwoBoard.(c) = None then invalid_board ()
-                    else boardState.pOneHP := !boardState.pOneHP - get_atk_c m; 
+                    else boardState.pOneHP := !boardState.pOneHP - get_atk_c m;
+                        boardState.pTwoBoard.(c).stealth := false;  
                 end 
                 else if t_only.(e) = None then invalid_board ()
                 else let d1 = get_atk_c m in
@@ -216,6 +223,11 @@ let inputAttack boardState (c,e) : unit =
                      let h2 = get_hp_c t_only.(e) in
                     match boardState.pTwoBoard.(c),boardState.pOneBoard.(e) with
                      | Some(x),Some(y) -> x.hp := h1 - d2; y.hp := h2 - d1;
+                                          x.stealth := false;
+                                          if x.hp <= 0 then 
+                                          boardState.pTwoBoard.(c) <- None;
+                                          if y.hp <= 0 then
+                                          boardState.pOneBoard.(e) <- None;
                      | _               -> invalid_board ()
 
     with
