@@ -1,11 +1,11 @@
 Name,Cost,HP,ATK,Eff Desc,Effect,Stealth,Taunt,Ctype
-Testbot,1,1,1,BattleCry Increase minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
-Testbot2,1,1,1,BattleCry Increase minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
-Testbot3,1,1,1,BattleCry Increase minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
-Testbot4,1,1,1,BattleCry Increase minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
-Testbot5,1,1,1,BattleCry Increase minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
-Testbot6,1,1,1,BattleCry Increase minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
-Testbot7,1,1,1,BattleCry Increase minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
+Testbot,1,1,1,BattleCry Increases minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
+Testbot2,1,1,1,BattleCry Increases minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
+Testbot3,1,1,1,BattleCry Increases minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
+Testbot4,1,1,1,BattleCry Increases minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
+Testbot5,1,1,1,BattleCry Increases minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
+Testbot6,1,1,1,BattleCry Increases minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
+Testbot7,1,1,1,BattleCry Increases minion attack by 1,bone 1 0,FALSE,FALSE,Protoss
 Krugs,7,7,7,,none,FALSE,FALSE,Zerg
 Lu Comma Justin,2,3,2,,none,FALSE,FALSE,Terran
 Justin's Pudge,3,2,5,,none,FALSE,FALSE,Protoss
@@ -13,43 +13,43 @@ Dan Liang's Luna,8,2,8,,none,FALSE,FALSE,Zerg
 Kevin's Teemo,1,3,1,has Stealth,none,TRUE,FALSE,Terran
 NineOuttaTen,9,10,9,,none,FALSE,FALSE,Protoss
 Mike Kuan's Ama,10,12,12,,none,FALSE,FALSE,Zerg
-John's Glasses,4,4,3,has Taunt,none,FALSE,TRUE,Terran
-Ross's Puff,5,5,5,has Taunt,none,FALSE,TRUE,Protoss
+John's Glasses,4,4,3,Has Taunt,none,FALSE,TRUE,Terran
+Ross's Puff,5,5,5,Has Taunt,none,FALSE,TRUE,Protoss
 Jason's Falcon,2,8,0,,none,FALSE,FALSE,Zerg
 Kurs,0,1,1,,none,FALSE,FALSE,Terran
 Matt's Roy,3,5,3,A Skilled Roy Can Beat Any Fox… and has Stealth,none,TRUE,FALSE,Protoss
 Hunter's Sheik,6,6,7,,none,FALSE,FALSE,Zerg
-Alan's Gates,2,4,1,has Taunt,none,FALSE,TRUE,Terran
+Alan's Gates,2,4,1,Has Taunt,none,FALSE,TRUE,Terran
 Justin's Mech Zeus Tho,3,99,99,Heal Everyone for 2,aoea 2 0,FALSE,FALSE,Spell
 Ajay's Lux,4,2,5,has Stealth,none,TRUE,FALSE,Protoss
-George's Blaze,4,2,0,Buff all friendly cards -1hp and +3 atk,aoef -1 3,FALSE,FALSE,Zerg
-Kenny's Hail,6,7,5,has Taunt,none,FALSE,TRUE,Terran
-Heather's Marth,5,6,6,Buff one minion +1 hp and +1 atk and has Stealth,bone 1 1,TRUE,FALSE,Spell
-BigTony's Chant,3,3,3,Increase attacks of protoss cards by 2,btype protoss 0 2,FALSE,FALSE,Protoss
+George's Blaze,4,2,0,Buffs all friendly cards -1 hp and +3 atk,aoef -1 3,FALSE,FALSE,Zerg
+Kenny's Hail,6,7,5,Has Taunt,none,FALSE,TRUE,Terran
+Heather's Marth,5,6,6,Buffs one minion +1 hp and +1 atk and has Stealth,bone 1 1,TRUE,FALSE,Spell
+BigTony's Chant,3,3,3,Increases attacks of protoss cards by 2,btype protoss 0 2,FALSE,FALSE,Protoss
 Andrew's Princess,7,4,6,Draw 1 card and has Stealth and Taunt,draw 1,TRUE,TRUE,Zerg
 Jonah's Cross,2,3,2,Draw 1 card,draw 1,FALSE,FALSE,Terran
-Ben's Shoes,5,6,7,Buff all cards by -2 hp and -1 atk,aoea -2 -1,
-Natsu's Dragon,3,5,7,Buff all enemy cards by -2 hp and -2 atk,aoea -2 -2,
-Sora's Key,4,4,6,Increase hp of Spell type cards by 1,btype spell 1 0,FALSE,FALSE,Spell
-Kirito's Dual Blade,4,5,7,Buff all enemy cards by -1 hp and -1 atk,aoee -1 -1,FALSE,FALSE,Zerg
-Eren's Titan,7,6,8,Decrease hp of all cards by 1,aoea -1 0,FALSE,FALSE,Zerg
-Lelouch's Geass,8,7,7,Increas attack of Zerg Cards by 2,bone zerg 0 2,
-Naruto's Fox,5,3,8, ,none,TRUE,TRUE,Protoss
+Ben's Shoes,5,6,7,Buffs all cards by -2 hp and -1 atk,aoea -2 -1,FALSE,FALSE,Spell
+Natsu's Dragon,3,5,7,Buffs all enemy cards by -2 hp and -2 atk,aoea -2 -2,FALSE,FALSE,Spell
+Sora's Key,4,4,6,Increases hp of Spell type cards by 1,btype spell 1 0,FALSE,FALSE,Spell
+Kirito's Dual Blade,4,5,7,Buffs all enemy cards by -1 hp and -1 atk,aoee -1 -1,FALSE,FALSE,Zerg
+Eren's Titan,7,6,8,Decreases hp of all cards by 1,aoea -1 0,FALSE,FALSE,Zerg
+Lelouch's Geass,8,7,7,Increases attack of Zerg Cards by 2,bone zerg 0 2,FALSE,FALSE,Terran
+Naruto's Fox,5,3,8,Has Stealth and Taunt,none,TRUE,TRUE,Protoss
 Luffy's Treasure,4,6,3,Draw 2 cards and has Taunt,draw 2,FALSE,TRUE,Protoss
-Cloud's Sword,7,7,7,Decrease all the hp of all enemy cards by 2,aoee -2 0,FALSE,FALSE,Zerg
-Mario's Mushroom,4,4,4,Increase attack of all friendly cards by 1 and has Taunt,aoef 0 1,FALSE,TRUE,Spell
+Cloud's Sword,7,7,7,Decreases all the hp of all enemy cards by 2,aoee -2 0,FALSE,FALSE,Zerg
+Mario's Mushroom,4,4,4,Increases attack of all friendly cards by 1 and has Taunt,aoef 0 1,FALSE,TRUE,Spell
 Sonic's Spin,2,5,3,Has Stealth and Taunt,none,TRUE,TRUE,Protoss
-Ash's Ball,1,3,2,,Buff both hp and atk of one minion by 1,bone 1 1,FALSE,FALSE,Terran
+Ash's Ball,1,3,2,Buffs both hp and atk of one minion by 1,bone 1 1,FALSE,FALSE,Terran
 Misaka's Lightning,3,6,6,Decreases both the hp and atk of enemy cards by 1 and has Taunt,aoee -1 -1,FALSE,TRUE,Zerg
 Saitama's Punch,8,8,8,Decreases hp of enemy cards by 3,aoee -3 0,FALSE,FALSE,Zerg
 Light's Note,6,7,8,Decreases both hp and atk of all cards by 3 and has Stealth,aoea -3 -3,TRUE,FALSE,Terran
 Goku's Dragonball,7,8,9,Increases both the hp and atk of all cards by 3,aoea 3 3,FALSE,FALSE,Protoss
-Souma's Knife,2,3,2,Increases both the hp and atk of friendly cards by 1,aoef 1 1,FALSE<FALSE,Spell
+Souma's Knife,2,3,2,Increases both the hp and atk of friendly cards by 1,aoef 1 1,FALSE,FALSE,Spell
 Archer's Bow,5,6,5,Decreases both the hp and atk of enemy cards by 1 and has stealth,aoee -1 -1,TRUE,FALSE,Terran
 Saber's Excalibur,6,7,6,Decreases both the hp and atk of enemy cards by 2 and has stealth,aoee -2 -2,TRUE,FALSE,Terran
 Edward's Alchemy,6,6,5,Draw 3 cards and has Stealth,draw 3,TRUE,FALSE,Zerg
 Yukino's Snow,4,3,5,Has Taunt,none,FALSE,TRUE,Protoss
-Negi's Staff,6,5,4,Buff a minion +2 hp and +2 atk and has Taunt,bone 2 2,FALSE,TRUE,Spell
+Negi's Staff,6,5,4,Buffs a minion +2 hp and +2 atk and has Taunt,bone 2 2,FALSE,TRUE,Spell
 Hayate's Wind,3,4,2,Decreases both the hp and atk of zerg type cards by 1 and has stealth,btype zerg -1 -1,TRUE,FALSE,Terran
-Inaho's Mech,5,5,5,Buff all Terran cards +1 hp and +1 atk,btype Terran 1 1,FALSE,FALSE,Terran
-3110IsFun,3,1,10,Draw 3 Cards,Draw 3,FALSE,FALSE,Zerg
+Inaho's Mech,5,5,5,Buffs all Terran cards +1 hp and +1 atk,btype terran 1 1,FALSE,FALSE,Terran
+3110IsFun,3,1,10,Draw 3 Cards,draw 3,FALSE,FALSE,Zerg
