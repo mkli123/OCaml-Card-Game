@@ -10,14 +10,46 @@ Krugs,7,7,7,,none,FALSE,FALSE,Zerg
 Lu Comma Justin,2,3,2,,none,FALSE,FALSE,Terran
 Justin's Pudge,3,2,5,,none,FALSE,FALSE,Protoss
 Dan Liang's Luna,8,2,8,,none,FALSE,FALSE,Zerg
-Kevin's Teemo,1,3,1,,none,TRUE,FALSE,Terran
+Kevin's Teemo,1,3,1,has Stealth,none,TRUE,FALSE,Terran
 NineOuttaTen,9,10,9,,none,FALSE,FALSE,Protoss
 Mike Kuan's Ama,10,12,12,,none,FALSE,FALSE,Zerg
-John's Glasses,4,4,3,,none,FALSE,TRUE,Terran
-Ross's Puff,5,5,5,,none,FALSE,TRUE,Protoss
+John's Glasses,4,4,3,has Taunt,none,FALSE,TRUE,Terran
+Ross's Puff,5,5,5,has Taunt,none,FALSE,TRUE,Protoss
 Jason's Falcon,2,8,0,,none,FALSE,FALSE,Zerg
 Kurs,0,1,1,,none,FALSE,FALSE,Terran
-Matt's Roy,3,5,3,A Skilled Roy Can Beat Any Fox…,none,TRUE,FALSE,Protoss
+Matt's Roy,3,5,3,A Skilled Roy Can Beat Any Fox… and has Stealth,none,TRUE,FALSE,Protoss
 Hunter's Sheik,6,6,7,,none,FALSE,FALSE,Zerg
-Alan's Gates,2,4,1,,none,FALSE,TRUE,Terran
+Alan's Gates,2,4,1,has Taunt,none,FALSE,TRUE,Terran
 Justin's Mech Zeus Tho,3,99,99,Heal Everyone for 2,aoea 2 0,FALSE,FALSE,Spell
+Ajay's Lux,4,2,5,has Stealth,none,TRUE,FALSE,Protoss
+George's Blaze,4,2,0,Buff all friendly cards -1hp and +3 atk,aoef -1 3,FALSE,FALSE,Zerg
+Kenny's Hail,6,7,5,has Taunt,none,FALSE,TRUE,Terran
+Heather's Marth,5,6,6,Buff one minion +1 hp and +1 atk and has Stealth,bone 1 1,TRUE,FALSE,Spell
+BigTony's Chant,3,3,3,Increase attacks of protoss cards by 2,btype protoss 0 2,FALSE,FALSE,Protoss
+Andrew's Princess,7,4,6,Draw 1 card and has Stealth and Taunt,draw 1,TRUE,TRUE,Zerg
+Jonah's Cross,2,3,2,Draw 1 card,draw 1,FALSE,FALSE,Terran
+Ben's Shoes,5,6,7,Buff all cards by -2 hp and -1 atk,aoea -2 -1,
+Natsu's Dragon,3,5,7,Buff all enemy cards by -2 hp and -2 atk,aoea -2 -2,
+Sora's Key,4,4,6,Increase hp of Spell type cards by 1,btype spell 1 0,FALSE,FALSE,Spell
+Kirito's Dual Blade,4,5,7, ,aoee -1 -1,
+Eren's Titan,7,6,8, ,aoef
+Lelouch's Geass,8,7,7, ,AoeA
+Naruto's Fox,5,3,8, ,none
+Luffy's Treasure,4,6,3, ,draw 2,
+Cloud's Sword,7,7,7,AoeF
+Mario's Mushroom,4,4,4, ,aoef 1 1,
+Sonic's Spin,2,5,3, ,bone
+Ash's Ball,1,3,2, ,bone 1 1,
+Misaka's Lightning,3,6,6, ,aoee
+Saitama's Punch,8,8,8, aoee
+Light's Note,6,7,8, ,aoea -3 -3,
+Goku's Dragonball,7,8,9, ,aoea 3 3,
+Souma's Knife,2,3,2, ,aoef 1 1,
+Archer's Bow,5,6,5, ,aoee -1 -1,
+Saber's Excalibur,6,7,6, ,aoee -2 -2,
+Edward's Alchemy,6,6,5,Draw 3 cards and has Stealth,draw 3,TRUE,FALSE,Zerg
+Yukino's Snow,4,3,5,has Taunt,none,FALSE,TRUE,Protoss
+Negi's Staff,6,5,4,Buff a minion +2 hp and +2 atk and has Taunt,bone 2 2,FALSE,TRUE,Spell
+Hayate's Wind,3,4,2, ,btype zerg -1 -1,TRUE,FALSE
+Inaho's Mech,5,5,5,Buff all Terran cards +1 hp and +1 atk,btype Terran 1 1,FALSE,FALSE,Terran
+3110IsFun,3,1,10,Draw 3 Cards,Draw 3,FALSE,FALSE,Zerg
