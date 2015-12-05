@@ -13,7 +13,7 @@ type mana  = {
 }
 
 (* mode defines whether or not it is player vs player or player vs ai *)
-type mode   = |VSai |PVP
+type mode   = |VSai of bool |PVP
 
 (* board keeps track of all the different aspects of the game at the current
  * state.
@@ -385,8 +385,18 @@ let inputGameHelp () : unit =
 		game ends and your opponent wins.\n";
 	Printf.printf "Type help to... I think you know what typing help does."
 
-let menu () = 
-	todo all
+
+let menu cardlist herolist deck1 deck2 pvp=
+let user_input = parse_menu() in
+match user_input with 
+|Draft -> if pvp=PVP then Printf.printf "Player 1 will Draft now.\n"; let d1 = build_deck 30 herolist cardlist in
+            Printf.printf "Player 2 will Draft now.\n"; let d2 = build_deck 30 herolist cardlist in Printf.printf "Have Fun! \n"; actualGame d1 d2 pvp
+        else Printf.printf "You will now Draft.\n"; let d1 = build_deck 30 herolist cardlist in let d2 = AIDraft herolist cardlist in actualGame d1 d2 pvp
+|Start -> actualGame deck1 deck2 pvp
+|Exit -> Printf.printf "Thanks for playing! \n";exit 0
+|Help -> Printf.printf "Type Draft to initiate a draft.\n";
+         Printf.printf "Type Start to play with predefined decks.\n";
+         Printf.printf "Type Exit to quit the game. \n"
 
 let actualGame (h1,d1) (h2,d2) m =
 	let init = makeBoard (h1,d1) (h2,d2) m in

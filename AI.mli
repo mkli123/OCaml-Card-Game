@@ -10,4 +10,4 @@ val MakeTurn : Board -> string
 player draft. The AI is given the coice between three cards. It chooses one of
 the three to add to its deck. This process is repeated until the deck is
 completed. The resulting deck is then returned. *)
-val AIDraft : unit -> deck
+val AIDraft : hero array -> card array -> hero*deck
