@@ -73,7 +73,9 @@ type deck = card list
  
 (* let cardlist_csv_name = Sys.argv.(1)*)
 
-
+let split s = 
+    let open Core.Std in
+    String.split s ' '
 (* get_ctype s extracts card type from the string value *)
 let get_ctype s = 
     match s with
@@ -86,7 +88,7 @@ let get_ctype s =
 (* parse_effect s extracts the etype from a string input *)
 let rec parse_effect s =
     let lows = String.trim (String.lowercase s) in
-    let infolst = Core.Std.String.split lows ' ' in
+    let infolst = split lows in
     match List.hd infolst with
     | "none"      -> None
     | "battlecry" -> 
