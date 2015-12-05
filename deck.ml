@@ -3,6 +3,8 @@
 (** Type of a card
  *  Spell is a spell, while Protoss,Zerg, and Terran cards are minions
  *)
+
+
 type ctyp =
     | Protoss
     | Zerg
@@ -135,7 +137,9 @@ let rec make_library clst cinfo =
         let new_clst = new_card::clst in
         make_library new_clst t
 
-
+let empty_card () =
+    {name = "emptycard";hp = ref 0; atck = ref 0;
+     effect = None; stealth = false; taunt = false; ctype = Zerg; }
 
 let import_cardlist f =
     let card_info = List.tl (Csv.load f) in
