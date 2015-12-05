@@ -1,8 +1,8 @@
-open deck
-open hero
-open ai
-open draft
-open command
+open Deck
+open Hero
+open Ai
+open Draft
+open Command
 
 (* keep track of current mana available to player at a given time
  * max is the mana you start with next turn
@@ -40,8 +40,8 @@ type board = {
     pOneDeck  : deck ref;
     pTwoDeck  : deck ref;
     hUsed     : bool ref;
-    pOneMana  : mana ref;
-    pTwoMana  : mana ref;
+    pOneMana  : mana;
+    pTwoMana  : mana;
     turn      : int ref;
 }
 
@@ -78,8 +78,8 @@ let makeBoard (h1,d1) (h2,d2) m =
 	pTwoHP    = ref 30;
 	pOneHand  = ref (draw_player pOneD 3);
 	pTwoHand  = ref (draw_player pTwoD 4);
-	pOneBoard = make 7 (None);
-	pTwoBoard = make 7 (None);
+	pOneBoard = Array.make 7 (None);
+	pTwoBoard = Array.make 7 (None);
 	pOneDeck  = pOneD;
 	pTwoDeck  = pTwoD;
 	hUsed     = ref false;
@@ -97,8 +97,28 @@ let indexOpening pBoard: int =
 	done in 
 	!count
 
+let draw_card BS n : unit =
+    let pTurn = !BS.turn mod 2 in
+    let chk = pTurn = 1 in
+    let draw_a_card BSt =
+        let plyrHP = if chk then BSt.pOneHP else BSt.pTwoHP in
+        let plyrHand = if chk then !BSt.pOneHand else !BSt.pTwoHand in
+        let plyrHandRef = if chk then BSt.pOneHand else BSt.pTwoHand in
+        let plyrDeck = if chk then !BSt.pOneDeck else !BSt.pTwoDeck in
+        let plyrDeckRef = if chk then BSt.pOneDeck else BSt.pTwoDeck in
+        match plyrDeck with
+        | [] -> plyrHP := !plyrHP - 2;
+                Printf.printf "No cards remaining in your deck! -2 HP";
+        | h::t when (List.length plyrHand) > 9 ->
+            Printf.printf "Too many cards in hand!\nBurned card: %s" 
+                (card_string (List.hd (draw_player plyrDeckRef 1)));
+        | h::t -> plyrHandRef := plyrHand@(draw_card plyrDeckRef 1);
+    in
+    for x = 0 to n do
+        draw_a_card BS;
+    done
+
 let printBoard boardState : unit =
-	let printBoard boardState : unit =
     let pTurn = !boardState.turn mod 2 in
     let chk = pTurn = 1 in
     let plyr = if chk then boardState.pOneHero else boardState.pTwoHero in
@@ -144,8 +164,6 @@ let printBoard boardState : unit =
     Printf.printf "Hero Power: %s\n" heroPower;
     Printf.printf "\nYour Hand:\n";
     prntList plyrHand 0
-(* resolve effect , return None if something went wrong*)
-let resolve_BC bS e : board option = 
 
 
 (* returns array with stealth minions removed*)
@@ -154,6 +172,7 @@ let rm_stealth brd =
         match x with
         | None    -> None
         | Some(c) -> if !c.stealth then None else Some(c)
+    in    
     Array.map f brd
 
 let get_atk_c co = 
@@ -169,7 +188,7 @@ let get_hp_c co =
 let inputAttack boardState (c,e) : unit = 
     let t = ref false in
     let f x = 
-        match x with begin
+        begin match x with
         | None       -> None
         | Some(card) -> if card.taunt && !card.stealth then Some(card)
                         else if card.taunt then t:= true; Some(card) 
@@ -234,8 +253,15 @@ let inputAttack boardState (c,e) : unit =
     | _ -> invalid_board ()
 
 
-let inputEnd boardState input : board =
-	todo kevin
+let inputEnd BS : unit =
+    BS.turn := (!BS.turn) + 1;
+    draw_card BS 1;
+    BS.hUsed := false;
+    let pTurn = (!BS.turn) mod 2 in
+    let chk = pTurn = 1 in
+    let plyrMana = if chk then BS.pOneMana else BS.pTwoMana in
+    if (!plyrMana.max) < 10 then plyrMana.max := (!plyrMana.max) + 1;
+    plyrMana.current := !plyrMana.max
 
 let inputHPow boardState input : board =
     if !boardstate.hUsed = true then
@@ -347,7 +373,7 @@ let buff_one who bs ind x y =
     (* for p1 *)
         match ind with
         | None    -> None
-        | Some(c) -> match c with begin
+        | Some(c) -> begin match c with 
                     | 100 -> if x < 0 && y = 0 
                             then bs.pOneHP:= !(bs.pOneHP) - x; Some(())
                             else None
@@ -381,7 +407,7 @@ let buff_one who bs ind x y =
     (* for p2 *)
         match ind with
         | None    -> None
-        | Some(c) -> match c with begin
+        | Some(c) ->begin match c with 
                     | 100 -> if x < 0 && y = 0 
                             then bs.pTwoHP:= !(bs.pTwoHP) - x; Some(())
                             else None
@@ -431,7 +457,7 @@ let inputPCard bS (x,op) : unit =
         match play.ctype,play.effect.efftype with
         | Spell,eff -> 
             let mana_use () = pMana.current := !(pMana.current) - play.cost; in
-            match eff with begin
+            begin match eff with 
             | None      -> mana_use ();
             | Draw(b,x) -> mana_use ();
                         draw_card bS x;
@@ -451,7 +477,7 @@ let inputPCard bS (x,op) : unit =
             end
         | _ ,eff    ->
             let mana_use () = pMana.current := !(pMana.current) - play.cost; in
-            match eff with begin
+            begin match eff with 
             | None with ind <= 6 ->
                 mana_use (); brd.(ind) <- Some(play);
             | Draw(b,x) with ind <= 6 ->
@@ -476,7 +502,7 @@ let inputPCard bS (x,op) : unit =
         match play.ctype,play.effect.efftype with
         | Spell,eff -> 
             let mana_use () = pMana.current := !(pMana.current) - play.cost; in
-            match eff with begin
+            begin match eff with 
             | None      -> mana_use ();
             | Draw(b,x) -> mana_use ();
                         draw_card bS x;
@@ -512,13 +538,10 @@ let inputPCard bS (x,op) : unit =
                 mana_use (); buff_type brd ct x y; brd.(ind) <- Some(play); 
             | BOne (x,y) with ind <= 6 ->
                 mana_use (); brd.(ind) <- Some(play);
-                try
+                (try
                     buff_one who bS op x y
-                with | _ -> invalid_i ();
-
-            end
+                with | _ -> invalid_i ();)
             | _ -> invalid_i ();
-
 
 
 let inputLookH boardState : unit =
