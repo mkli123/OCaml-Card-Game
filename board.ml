@@ -102,13 +102,31 @@ let printBoard boardState : unit =
 
 (* returns array with  *)
 let rm_stealth brd = 
-    let f x = if !x.stealth then x else empty_card () in
+    let f x = 
+        match x with
+        | None    -> None
+        | Some(c) -> if !c.stealth then None else Some(c)
     Array.map f brd
+
+let get_atk_c co = 
+    match co with
+    |None    -> 0
+    |Some(x) -> !x.atk
+
+let get_hp_c co =
+    match co with
+    |None    -> 0
+    |Some(x) -> !x.hp
 
 let inputAttack boardState (c,e) : unit = 
     let t = ref false in
-    let f x = if x.taunt = true && !x.stealth = true then t := true; x 
-                else if x.taunt = true then t := true; x else empty_card ()
+    let f x = 
+        match x with begin
+        | None       -> None
+        | Some(card) -> if card.taunt && !card.stealth then Some(card)
+                        else if card.taunt then t:= true; Some(card) 
+                        else None 
+        end
     in
     (* sets t to true if there is a taunt and returns array of only
         taunted stuff then *)
@@ -118,8 +136,8 @@ let inputAttack boardState (c,e) : unit =
     let invalid_board () = Printf.printf "Invalid Attack...\n";in
     try 
         if (!boardState.turn) mod 2 = 1 then begin
-            let minion = (!boardState.pOneBoard).(c) in
-            let t_only = check_taunt !boardState.pTwoBoard in
+            let minion = boardState.pOneBoard).(c) in
+            let t_only = check_taunt boardState.pTwoBoard in
             if !((!boardState.pOneBoard).(c).hp) <=0 then invalid_board ()
             else
                 if e = 200 && (not t) then begin
