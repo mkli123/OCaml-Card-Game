@@ -35,8 +35,8 @@ type board = {
     pTwoHP    : int ref;
     pOneHand  : card list ref;
     pTwoHand  : card list ref;  
-    pOneBoard : card list ref;
-    pTwoBoard : card list ref;
+    pOneBoard : card option array;
+    pTwoBoard : card option array;
     pOneDeck  : deck ref;
     pTwoDeck  : deck ref;
     hUsed     : bool ref;
@@ -78,8 +78,8 @@ let makeBoard (h1,d1) (h2,d2) m =
 	pTwoHP    = ref 30;
 	pOneHand  = ref (draw_player pOneD 3);
 	pTwoHand  = ref (draw_player pTwoD 4);
-	pOneBoard = ref make 7 (empty_card ());
-	pTwoBoard = ref make 7 (empty_card ());
+	pOneBoard = make 7 (None);
+	pTwoBoard = make 7 (None);
 	pOneDeck  = pOneD;
 	pTwoDeck  = pTwoD;
 	hUsed     = ref false;
@@ -89,10 +89,10 @@ let makeBoard (h1,d1) (h2,d2) m =
 	}
 (*returns the first possible place to put a new minion. 8 if full*)
 let indexOpening pBoard: int = 
-	let count = ref 8 in let a =
-	for x = 0 to Array.length pBoard 
+	let count = ref 8 in let _ =
+	for x = 0 to Array.length pBoard - 1 
 	do 
-		if pBoard.(x).hp <= 0 then 
+		if pBoard.(x) = None then 
 		if x<(!count) then count:=x
 	done in 
 	!count
