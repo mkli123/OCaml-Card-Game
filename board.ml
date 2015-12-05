@@ -186,14 +186,14 @@ let inputAttack boardState (c,e) : unit =
         if (!boardState.turn) mod 2 = 1 then begin
             let m = boardState.pOneBoard).(c) in
             let t_only = check_taunt boardState.pTwoBoard in
-            if boardState.pOneBoard.(c) = None then invalid_board ()
+            if boardState.pOneBoard.(c) = None then invalid_board ();
             else
                 if e = 200 && (not t) then begin
-                    if boardState.pOneBoard.(c) = None then invalid_board ()
+                    if boardState.pOneBoard.(c) = None then invalid_board ();
                     else boardState.pTwoHP := !boardState.pTwoHP - get_atk_c m;
                          boardState.pOneBoard.(c).stealth := false; 
                 end 
-                else if t_only.(e) = None then invalid_board ()
+                else if t_only.(e) = None then invalid_board ();
                 else let d1 = get_atk_c m in
                      let d2 = get_atk_c t_only.(e) in
                      let h1 = get_hp_c m in
@@ -209,14 +209,14 @@ let inputAttack boardState (c,e) : unit =
         end else
             let m = boardState.pTwoBoard).(c) in
             let t_only = check_taunt boardState.pOneBoard in
-            if boardState.pTwoBoard.(c) = None then invalid_board ()
+            if boardState.pTwoBoard.(c) = None then invalid_board ();
             else
                 if e = 100 && (not t) then begin
-                    if boardState.pTwoBoard.(c) = None then invalid_board ()
+                    if boardState.pTwoBoard.(c) = None then invalid_board ();
                     else boardState.pOneHP := !boardState.pOneHP - get_atk_c m;
                         boardState.pTwoBoard.(c).stealth := false;  
                 end 
-                else if t_only.(e) = None then invalid_board ()
+                else if t_only.(e) = None then invalid_board ();
                 else let d1 = get_atk_c m in
                      let d2 = get_atk_c t_only.(e) in
                      let h1 = get_hp_c m in
@@ -274,13 +274,16 @@ let inputHPow boardState input : board =
 (* takes in [ind] index of card you want, [lst] hand you draw from
     acc is the start index 
     returns: (card,newhand)*)
-let get_crd ind lst acc =
+let rec get_crd ind lst acc =
     match lst with
-    | []                  -> (empty_card (),[])
-    | h::t with ind = acc -> 
-        let fil x = h <> t in
-        (h,List.filter fil lst)
+    | _        with acc > 10    -> (empty_card (),[])
+    | Some(c)::t with ind = acc -> 
+        let fil x = Some(c) <> x in
+        (c,List.filter fil lst)
     | h::t                -> get_crd ind lst (acc + 1)
+
+let buff brd h a =
+    
 
 let inputPCard bS (x,op) : board = 
     let invalid_i () = Printf.printf "Invalid play...\n"; in
@@ -292,14 +295,30 @@ let inputPCard bS (x,op) : board =
     let hnd       = if who then bS.pOneHand else bS.pTwoHand in
     let temp_hand = !hnd in
     let pMana = if who then bS.pOneMana else bS.pTwoMana in
-    if x >= List.length (!hnd) then invalid_i () else
+    if x >= List.length (!hnd) then invalid_i (); else
     let new_hand = get_crd x temp_hand 0 in
-    if (fst new_hand).cost > !pMana.current then invalid_i () else
-    match (fst new_hand).ctype with
-    | Spell ->
-        match resolve_e 
-    | _     ->
+    let play = fst new_hand in
+    if play.cost > !pMana.current then invalid_i (); else
+    if who then begin
+        match play.ctype,play.effect.efftype with
+        | Spell,eff -> 
+            match eff with begin
+            | None      -> pMana.current := !pMana.current - play.cost;
+            | Draw(b,x) -> pMana.current := !pMana.current - play.cost;
+                        
+            | AoeE(x,y) -> pMana.current := !pMana.current - play.cost;
 
+            |
+            |
+        | _ ,eff    ->
+            match eff with
+            | None -> if ind <= 6 then begin
+                pMana.current := !pMana.current - play.cost;
+                brd.(ind) <- Some(play);
+                end else invalid_i ();
+
+    end else
+    (* p2stuff *)
 
 
 

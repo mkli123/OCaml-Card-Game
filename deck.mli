@@ -15,7 +15,7 @@ type ctyp =
 type etype =
     | None
     (* draw a certain number of cards where bool represents self or opponent *)
-    | Draw        of bool * int
+    | Draw        of int
     (* buff all friendly cards hp and atk respectively *)
     | AoeF        of int * int
     (* buff all enemy cards hp and atk respectively *)

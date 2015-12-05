@@ -18,7 +18,7 @@ type ctyp =
 type etype =
     | None
     (* draw a certain number of cards where bool represents self or opponent *)
-    | Draw        of bool * int
+    | Draw        of int
     (* buff all friendly cards hp and atk respectively *)
     | AoeF        of int * int
     (* buff all enemy cards hp and atk respectively *)
@@ -87,8 +87,7 @@ let rec parse_effect s =
     match List.hd infolst with
     | "none"      -> None
     | "draw" ->
-        Draw(bool_of_string  (List.nth infolst 1),
-            int_of_string  (List.nth infolst 2))
+        Draw(int_of_string  (List.nth infolst 1))
     | "aoef" ->
         AoeF(int_of_string  (List.nth infolst 1),
              int_of_string  (List.nth infolst 2))
