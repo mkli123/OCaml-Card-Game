@@ -67,26 +67,26 @@ let draw_player d n =
 
 (* Need to figure out how to check who goes first *)
 let makeBoard (h1,d1) (h2,d2) m =
-	let rand = Random.bool () in
-	let pOneD = if rand then d1 else d2 in
-	let pTwoD = if rand then d2 else d1 in
-	{
-	mode      = m;
-	pOneHero  = if rand then h1 else h2;
-	pTwoHero  = if rand then h2 else h1;
-	pOneHP    = ref 30;
-	pTwoHP    = ref 30;
-	pOneHand  = ref (draw_player pOneD 3);
-	pTwoHand  = ref (draw_player pTwoD 4);
-	pOneBoard = Array.make 7 (None);
-	pTwoBoard = Array.make 7 (None);
-	pOneDeck  = pOneD;
-	pTwoDeck  = pTwoD;
-	hUsed     = ref false;
-	pOneMana  = {max = ref 0; current = ref 0;};
-	pTwoMana  = {max = ref 0; current = ref 0;};
-	turn      = ref 0;
-	}
+    let rand = Random.bool () in
+    let pOneD = if rand then d1 else d2 in
+    let pTwoD = if rand then d2 else d1 in
+    {
+    mode      = m;
+    pOneHero  = if rand then h1 else h2;
+    pTwoHero  = if rand then h2 else h1;
+    pOneHP    = ref 30;
+    pTwoHP    = ref 30;
+    pOneHand  = ref (draw_player pOneD 3);
+    pTwoHand  = ref (draw_player pTwoD 4);
+    pOneBoard = Array.make 7 (None)
+    pTwoBoard = Array.make 7 (None);
+    pOneDeck  = pOneD;
+    pTwoDeck  = pTwoD;
+    hUsed     = ref false;
+    pOneMana  = {max = ref 0; current = ref 0;};
+    pTwoMana  = {max = ref 0; current = ref 0;};
+    turn      = ref 0;
+    }
 (*returns the first possible place to put a new minion. 8 if full*)
 let indexOpening pBoard: int = 
 	let count = ref 8 in let _ =
@@ -98,7 +98,7 @@ let indexOpening pBoard: int =
 	!count
 
 let draw_card BS n : unit =
-    let pTurn = !BS.turn mod 2 in
+    let pTurn = (!BS.turn) mod 2 in
     let chk = pTurn = 1 in
     let draw_a_card BSt =
         let plyrHP = if chk then BSt.pOneHP else BSt.pTwoHP in
@@ -107,7 +107,7 @@ let draw_card BS n : unit =
         let plyrDeck = if chk then !BSt.pOneDeck else !BSt.pTwoDeck in
         let plyrDeckRef = if chk then BSt.pOneDeck else BSt.pTwoDeck in
         match plyrDeck with
-        | [] -> plyrHP := !plyrHP - 2;
+        | [] -> plyrHP := (!plyrHP) - 2;
                 Printf.printf "No cards remaining in your deck! -2 HP";
         | h::t when (List.length plyrHand) > 9 ->
             Printf.printf "Too many cards in hand!\nBurned card: %s" 
@@ -118,18 +118,18 @@ let draw_card BS n : unit =
         draw_a_card BS;
     done
 
-let printBoard boardState : unit =
-    let pTurn = !boardState.turn mod 2 in
+let printBoard BS : unit =
+    let pTurn = (!BS.turn) mod 2 in
     let chk = pTurn = 1 in
-    let plyr = if chk then boardState.pOneHero else boardState.pTwoHero in
-    let plyrHP = if chk then !boardState.pOneHP else !boardState.pTwoHP in
-    let plyrHand = if chk then !boardState.pOneHand else !boardState.pTwoHand in
-    let plyrB = if chk then boardState.pOneBoard else boardState.pTwoBoard in
-    let opp = if chk then boardState.pTwoHero else boardState.pOneHero in
-    let oppHP = if chk then !boardState.pTwoHP else !boardState.pOneHP in
-    let oppHand = if chk then !boardState.pTwoHand else !boardState.pOneHand in
-    let oppB = if chk then boardState.pTwoBoard else boardState.pOneBoard in
-    let heroPower = if !boardState.hUsed then "Unavailable" else "Available" in
+    let plyr = if chk then BS.pOneHero else BS.pTwoHero in
+    let plyrHP = if chk then !BS.pOneHP else !BS.pTwoHP in
+    let plyrHand = if chk then !BS.pOneHand else !BS.pTwoHand in
+    let plyrB = if chk then BS.pOneBoard else BS.pTwoBoard in
+    let opp = if chk then BS.pTwoHero else BS.pOneHero in
+    let oppHP = if chk then !BS.pTwoHP else !BS.pOneHP in
+    let oppHand = if chk then !BS.pTwoHand else !BS.pOneHand in
+    let oppB = if chk then BS.pTwoBoard else BS.pOneBoard in
+    let heroPower = if !BS.hUsed then "Unavailable" else "Available" in
     let prntCard c i =
         match c with
         | None    -> ()
@@ -164,7 +164,6 @@ let printBoard boardState : unit =
     Printf.printf "Hero Power: %s\n" heroPower;
     Printf.printf "\nYour Hand:\n";
     prntList plyrHand 0
-
 
 (* returns array with stealth minions removed*)
 let rm_stealth brd = 
@@ -325,7 +324,7 @@ let inputHPow boardState input : board =
                                 else if x = 200 then (if moded = 0 then boardState.pOneHP:=(!boardState.pOneHP+2);boardState.pTwoMana.current:=
                                 (!boardState.pTwoMana.current-2) else boardState.pTwoHP:=(!boardState.pTwoHP+2);boardState.pOneMana.current:=
                                 (!boardState.pOneMana.current-2)) else Printf.printf "Invalid Target.\n"
-            |Warlock, _ -> draw_card boardState; (if moded = 0 then boardState.pTwoHP:=(!boardState.pTwoHP-2);boardState.pTwoMana.current:=
+            |Warlock, _ -> draw_card boardState 1; (if moded = 0 then boardState.pTwoHP:=(!boardState.pTwoHP-2);boardState.pTwoMana.current:=
                                 (!boardState.pTwoMana.current-2) else boardState.pOneHP:=(!boardState.pOneHP-2);boardState.pOneMana.current:=
                                 (!boardState.pOneMana.current-2))
             |_,_ -> Printf.printf "Invalid Hpow command.\n" 
