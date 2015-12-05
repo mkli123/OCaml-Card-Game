@@ -158,7 +158,7 @@ let inputEnd boardState input : board =
 	todo kevin
 
 let inputHPow boardState input : board =
-	let player = if (boardState.turn mod 2) = 0 then 
+	let player = if (!boardState.turn mod 2) = 0 then 
 	pTwoHero else pOneHero in match player with
 	|Mage ->
 	|Paladin -> 
@@ -173,10 +173,10 @@ let inputPCard boardState input : board =
     todooooo
 
 let inputLookH boardState : unit =
-	let player = if (boardState.turn mod 2) = 0 then 
-		boardState.pTwoHand 
+	let player = if (!boardState.turn mod 2) = 0 then 
+		!boardState.pTwoHand 
 	else
-		boardState.pOneHand in 
+		!boardState.pOneHand in 
 	Printf.printf "Your hand contains:\n";
 	let helper = function
 	|[]->()
@@ -184,7 +184,7 @@ let inputLookH boardState : unit =
 	helper player
 
 let inputConcede boardState : unit =
-	let player = boardState.turn mod 2 in
+	let player = !boardState.turn mod 2 in
 	let playernum = if player = 0 then "Player 1" else "Player 2" in
 	Printf.printf "%s Wins!" playernum
 
