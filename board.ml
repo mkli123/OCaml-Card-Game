@@ -63,7 +63,6 @@ let draw_player d n =
 	d := fst x;
 	snd x
 
-
 (* Need to figure out how to check who goes first *)
 let makeBoard (h1,d1) (h2,d2) m =
 	let rand = Random.bool () in
@@ -75,25 +74,68 @@ let makeBoard (h1,d1) (h2,d2) m =
 	pTwoHero  = if rand then h2 else h1;
 	pOneHP    = ref 30;
 	pTwoHP    = ref 30;
-	pOneHand  = ref (snd (draw_player pOneD 3);
-	pTwoHand  = ref (snd (draw_player pTwoD 4);
-	pOneBoard = ref [];
-	pTwoBoard = ref [];
+	pOneHand  = ref (draw_player pOneD 3);
+	pTwoHand  = ref (draw_player pTwoD 4);
+	pOneBoard = ref make 7 (empty_card ());
+	pTwoBoard = ref make 7 (empty_card ());
 	pOneDeck  = pOneD;
 	pTwoDeck  = pTwoD;
 	hUsed     = ref false;
-	pOneMana  = ref 0;
-	pTwoMana  = ref 0;
+	pOneMana  = {max = ref 0; current = ref 0;};
+	pTwoMana  = {max = ref 0; current = ref 0;};
 	turn      = ref 0;
 	}
 
+let printBoard boardState : unit =
+	todo kevin
 
+let inputAttack boardSate input : board =
+	todo Mike
 
+let inputEnd boardState input : board =
+	todo kevin
 
+let inputHPow boardState input : board =
+	todo kevin
 
+let inputPCard boardState input : board =
+	todo mike
 
+let inputLookH boardState : unit =
+	let player = if (boardState.turn mod 2) = 0 then 
+		boardState.pTwoHand 
+	else
+		boardState.pOneHand in 
+	Printf.printf "Your hand contains:\n";
+	let helper = function
+	|[]->()
+	|h::t-> Printf.printf "%s" (card_string h);helper t in
+	helper player
 
+let inputConcede boardState : unit =
+	let player = boardState.turn mod 2 in
+	let playernum = if player = 0 then "Player 1" else "Player 2" in
+	Printf.printf "%s Wins!" playernum
 
+let inputGameHelp () : unit =
+	Printf.printf "Type attack # # where the first # is 
+		your minion and the second # is the opponents minion.\n";
+	Printf.printf "This uses your card to attack the opponents minion.\n";
+	Printf.printf "Type end to complete your turn. \n";
+	Printf.printf "Type Hpow # if your hero power can target someone\n";
+	Printf.printf "If it doesn't target just type Hpow.\n";
+	Printf.printf "Type pcard # to play the card # in your hand.\n";
+	Printf.printf "Type lookh to see your hand.\n";
+	Printf.printf "Type concede to give up! The 
+		game ends and your opponent wins.\n";
+	Printf.printf "Type help to... I think you know what typing help does."
 
+let menu () = 
+	todo all
 
-
+let actualGame (h1,d1) (h2,d2) m =
+	let init = makeBoard (h1,d1) (h2,d2) m in
+	let rec repl boardState : board =
+		match boardState.mode with
+		| PVP -> 
+	in
