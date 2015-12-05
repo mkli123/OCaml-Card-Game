@@ -155,7 +155,7 @@ let shuffle d =
     Array.to_list (shuf (Array.of_list d) 50)
 
 let card_string c =
-    if c.ctype = spell then begin "Cost: "^
+    if c.ctype = Spell then begin "Cost: "^
         (string_of_int c.cost)^"; Name: "^c.name^c.effect.description^"\n"
     end else
         "Cost: "^
