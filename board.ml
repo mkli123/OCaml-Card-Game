@@ -100,38 +100,59 @@ let indexOpening pBoard: int =
 let printBoard boardState : unit =
 	todo kevin
 
-let rm_stealth brd = Array.map (fun x -> !x.stealth = true) brd
+(* returns array with  *)
+let rm_stealth brd = 
+    let f x = if !x.stealth then x else empty_card () in
+    Array.map f brd
 
-let inputAttack boardState (c,e) : board = 
+let inputAttack boardState (c,e) : unit = 
     let t = ref false in
-    let f x = if x.taunt = true && x.stealth = true then false 
-                else if x.taunt = true then t := true; true else false
+    let f x = if x.taunt = true && !x.stealth = true then t := true; x 
+                else if x.taunt = true then t := true; x else empty_card ()
     in
     (* sets t to true if there is a taunt and returns array of only
         taunted stuff then *)
     let check_taunt brd = let x = Array.map f brd in
         if !t then x else rm_stealth brd
-in
-    let invalid_board () = Printf.printf "Invalid Attack...\n"; boardState in
+
+    let invalid_board () = Printf.printf "Invalid Attack...\n";in
     try 
         if (!boardState.turn) mod 2 = 1 then begin
-            if e = 200 && (not t) then begin
-                try if boardState.pOneBoard.(c).hp <= 0 invalid_board ()
-                else
-
-
-            end else
-                try 
-                 (boardState.(e).hp <= 0)
-                    then invalid_board ()
-                    else
-        
-
-                with
-                | _ -> invalid_board ()
-        end else
-            if e = 100 then
+            let minion = (!boardState.pOneBoard).(c) in
+            let t_only = check_taunt !boardState.pTwoBoard in
+            if !((!boardState.pOneBoard).(c).hp) <=0 then invalid_board ()
             else
+                if e = 200 && (not t) then begin
+                    if !(boardState.pOneBoard).(c).hp <= 0 invalid_board ()
+                    else boardState.pTwoHP := !boardState.pTwoHP - minion.atk; 
+                end 
+                else if !(t_only.(e).hp) <=0 then invalid_board ()
+                else let d1 = minion.atk in
+                     let d2 = !(t_only.(e).atk) in
+                     let h1 = !((!boardState.pOneBoard).(c).hp) in
+                     let h2 = !((!boardState.pTwoBoard).(e).hp) in
+                     (!boardState.pOneBoard).(c).hp := h1 - d2;
+                     (!boardState.pTwoBoard).(e).hp := h2 - d1;
+        end else
+            let minion = (!boardState.pTwoBoard).(c) in
+            let t_only = check_taunt !boardState.pOneBoard in
+            if !()!boardState.pTwoBoard).(c).hp)<=0 then invalid_board ()
+        else   
+                if e = 100 && (not t) then begin
+                    if !((boardState.pTwoBoard).(c).hp) <= 0 invalid_board ()
+                    else boardState.pOneHP := !boardState.pOneHP - minion.atk; 
+                end 
+                else if !(t_only.(e).hp) <=0 then invalid_board ()
+                else let d1 = minion.atk in
+                     let d2 = !(t_only.(e).atk)in
+                     let h1 = !((!boardState.pTwoBoard).(c).hp) in
+                     let h2 = !((!boardState.pOneBoard).(e).hp) in
+                     (!boardState.pTwoBoard).(c).hp := h1 - d2;
+                     (!boardState.pOneBoard).(e).hp := h2 - d1;
+
+    with
+    | _ -> invalid_board ()
+
 
 let inputEnd boardState input : board =
 	todo kevin
