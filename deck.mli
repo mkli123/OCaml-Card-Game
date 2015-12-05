@@ -14,10 +14,6 @@ type ctyp =
  *)
 type etype =
     | None
-    (* effect happens when card is played *)
-    | BattleCry   of etype
-    (* effect happens when card leaves board *)
-    | DeathRattle of etype
     (* draw a certain number of cards where bool represents self or opponent *)
     | Draw        of bool * int
     (* buff all friendly cards hp and atk respectively *)
