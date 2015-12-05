@@ -54,7 +54,7 @@ type card =
     hp    : int ref;
     atk   : int ref;
     effect: effect;
-    stealth: bool;
+    stealth: bool ref;
     taunt : bool;
     ctype : ctyp;
     cost  : int;

@@ -57,7 +57,7 @@ type card =
     hp    : int ref;
     atk   : int ref;
     effect: effect;
-    stealth: bool;
+    stealth: bool ref;
     taunt : bool;
     ctype : ctyp;
     cost  : int;
@@ -130,7 +130,7 @@ let rec make_library clst cinfo =
             atk = ref (int_of_string (List.nth h 3));
             effect = {description = (List.nth h 4);
                       efftype = parse_effect (List.nth h 5)};
-            stealth = bool_of_string  (String.lowercase (List.nth h 6));
+            stealth = ref (bool_of_string  (String.lowercase (List.nth h 6)));
             taunt   = bool_of_string  (String.lowercase (List.nth h 7));
             ctype   = get_ctype (List.nth h 8);}
         in
@@ -139,7 +139,7 @@ let rec make_library clst cinfo =
 
 let empty_card () =
     {name = "emptycard";hp = ref 0; atck = ref 0;
-     effect = None; stealth = false; taunt = false; ctype = Zerg; }
+     effect = None; stealth = ref false; taunt = false; ctype = Zerg; }
 
 let import_cardlist f =
     let card_info = List.tl (Csv.load f) in
