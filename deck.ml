@@ -17,10 +17,6 @@ type ctyp =
  *)
 type etype =
     | None
-    (* effect happens when card is played *)
-    | BattleCry   of etype
-    (* effect happens when card leaves board *)
-    | DeathRattle of etype
     (* draw a certain number of cards where bool represents self or opponent *)
     | Draw        of bool * int
     (* buff all friendly cards hp and atk respectively *)
@@ -90,14 +86,6 @@ let rec parse_effect s =
     let infolst = split lows in
     match List.hd infolst with
     | "none"      -> None
-    | "battlecry" ->
-        let spc = (String.index lows ' ' ) + 1 in
-        let len = (String.length lows) - spc in
-        BattleCry(parse_effect (String.sub lows spc len))
-    | "deathrattle" ->
-        let spc = (String.index lows ' ' ) + 1 in
-        let len = (String.length lows) - spc in
-        DeathRattle(parse_effect (String.sub lows spc len))
     | "draw" ->
         Draw(bool_of_string  (List.nth infolst 1),
             int_of_string  (List.nth infolst 2))
