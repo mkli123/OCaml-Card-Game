@@ -557,7 +557,7 @@ let inputLookH boardState : unit =
 let inputConcede boardState : unit =
 	let player = !boardState.turn mod 2 in
 	let playernum = if player = 0 then "Player 1" else "Player 2" in
-	Printf.printf "%s Wins!" playernum
+	Printf.printf "%s Wins!" playernum; exit 0
 
 let inputGameHelp () : unit =
 	Printf.printf "Type attack # # where the first # is 
