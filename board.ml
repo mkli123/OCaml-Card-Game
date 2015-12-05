@@ -316,10 +316,104 @@ let rec get_crd ind lst acc =
         (c,List.filter fil lst)
     | h::t                -> get_crd ind lst (acc + 1)
 
+(* Applies buff of h and a to input board which is card array *)
 let buff brd h a =
-    
+    let rec buff_c n = 
+        match brd.(n) with
+            | None with n < 7     -> buff_c (n + 1);
+            | Some(c)  with n < 7 -> c.hp := !(c.hp) + h;
+                                    c.atk := !(c.atk) + a;
+                                    if !c.hp <= 0 then brd.(n)<- None;
+                                    buff_c (n + 1);
+            | _ -> ()
+    in
+    buff_c 0
+(* applies buff to all types on your side *)
+let buff_type brd t h a =
+     let rec buff_c n = 
+        match brd.(n) with
+            | None with n < 7     -> buff_c (n + 1);
+            | Some(c)  with n < 7 && (c.ctype = t)-> c.hp := !(c.hp) + h;
+                                    c.atk := !(c.atk) + a;
+                                    if !c.hp <= 0 then brd.(n)<- None;
+                                    buff_c (n + 1);
+            | _ -> ()
+    in
+    buff_c 0
+(* takes in who's turn it is as a bool, true is p1
+    then tries to buff that thing by either causing dmg or w.e *)
+let buff_one who bs ind x y =
+    if who then
+    (* for p1 *)
+        match ind with
+        | None    -> None
+        | Some(c) -> match c with begin
+                    | 100 -> if x < 0 && y = 0 
+                            then bs.pOneHP:= !(bs.pOneHP) - x; Some(())
+                            else None
+                    | 200 -> if x < 0 && y = 0 
+                            then bs.pTwoHP:= !(bs.pTwoHP) - x; Some(())
+                            else None
+                    | n   -> try 
+                                if (n < 7 && n >= 0) then begin
+                                match bs.pOneBoard.(n) with
+                                | None -> None
+                                | Some(d) -> 
+                                    if !d.stealth then None else
+                                    d.atk := !(d.atk) + y;
+                                    d.hp := !(d.hp) + x;
+                                    if !(d.hp) <= 0 
+                                    then bs.pOneBoard.(n) <- None ; Some(())
+                                end 
+                            else if (n >= 10 && n < 17) begin
+                                match bs.pTwoBoard.(n-10) with
+                                | None -> None
+                                | Some(d) -> 
+                                    if !d.stealth then None else
+                                    d.atk := !(d.atk) + y;
+                                    d.hp := !(d.hp) + x;
+                                    if !(d.hp) <= 0 
+                                    then bs.pTwoBoard.(n) <- None ; Some(())
+                                end 
+                            with | _ -> None
+            end
+    else
+    (* for p2 *)
+        match ind with
+        | None    -> None
+        | Some(c) -> match c with begin
+                    | 100 -> if x < 0 && y = 0 
+                            then bs.pTwoHP:= !(bs.pTwoHP) - x; Some(())
+                            else None
+                    | 200 -> if x < 0 && y = 0 
+                            then bs.pOneHP:= !(bs.pOneHP) - x; Some(())
+                            else None
+                    | n   -> try 
+                                if (n < 7 && n >= 0) then begin
+                                match bs.pTwoBoard.(n) with
+                                | None -> None
+                                | Some(d) -> 
+                                    if !d.stealth then None else
+                                    d.atk := !(d.atk) + y;
+                                    d.hp := !(d.hp) + x;
+                                    if !(d.hp) <= 0 
+                                    then bs.pTwoBoard.(n) <- None ; Some(())
+                                end 
+                            else if (n >= 10 && n < 17) begin
+                                match bs.pOneBoard.(n-10) with
+                                | None -> None
+                                | Some(d) -> 
+                                    if !d.stealth then None else
+                                    d.atk := !(d.atk) + y;
+                                    d.hp := !(d.hp) + x;
+                                    if !(d.hp) <= 0 
+                                    then bs.pOneBoard.(n) <- None ; Some(())
+                                end 
+                            with | _ -> None
+            end
 
-let inputPCard bS (x,op) : board = 
+
+let inputPCard bS (x,op) : unit = 
     let invalid_i () = Printf.printf "Invalid play...\n"; in
     let who = bS.turn mod 2 = 1 in
     let brd = if who then bS.pOneBoard else bS.pTwoBoard
@@ -332,27 +426,98 @@ let inputPCard bS (x,op) : board =
     if x >= List.length (!hnd) then invalid_i (); else
     let new_hand = get_crd x temp_hand 0 in
     let play = fst new_hand in
-    if play.cost > !pMana.current then invalid_i (); else
+    if play.cost > !(pMana.current) then invalid_i (); else
     if who then begin
         match play.ctype,play.effect.efftype with
         | Spell,eff -> 
+            let mana_use () = pMana.current := !(pMana.current) - play.cost; in
             match eff with begin
-            | None      -> pMana.current := !pMana.current - play.cost;
-            | Draw(b,x) -> pMana.current := !pMana.current - play.cost;
-                        
-            | AoeE(x,y) -> pMana.current := !pMana.current - play.cost;
-
-            |
-            |
+            | None      -> mana_use ();
+            | Draw(b,x) -> mana_use ();
+                        draw_card bS x;
+            | AoeF(x,y) -> mana_use ();
+                        buff brd x y;
+            | AoeE(x,y) -> mana_use ();
+                        buff bS.pTwoBoard x y;
+            | AoeA(x,y) -> mana_use ();
+                        buff brd x y;
+                        buff bS.pTwoBoard x y;
+            | BType(ct,x,y) -> mana_use ();
+                        buff_type brd ct x y;
+            | BOne (x,y) -> 
+                try
+                    buff_one who bS op x y
+                with | _ -> invalid_i ()
+            end
         | _ ,eff    ->
-            match eff with
-            | None -> if ind <= 6 then begin
-                pMana.current := !pMana.current - play.cost;
+            let mana_use () = pMana.current := !(pMana.current) - play.cost; in
+            match eff with begin
+            | None with ind <= 6 ->
+                mana_use (); brd.(ind) <- Some(play);
+            | Draw(b,x) with ind <= 6 ->
+                mana_use (); draw_card bS x; brd.(ind) <- Some(play);
+            | AoeF(x,y) with ind <= 6 ->
+                mana_use (); buff brd x y; brd.(ind) <- Some(play); 
+            | AoeE(x,y) with ind <= 6 ->
+                mana_use (); buff bS.pTwoBoard x y; brd.(ind) <- Some(play);
+            | AoeA(x,y) with ind <= 6 ->
+                mana_use (); buff brd x y; buff bS.pTwoBoard x y; 
                 brd.(ind) <- Some(play);
-                end else invalid_i ();
+            | BType(ct,x,y) with ind <= 6 ->
+                mana_use (); buff_type brd ct x y; brd.(ind) <- Some(play); 
+            | BOne (x,y) with ind <= 6 ->
+                mana_use (); brd.(ind) <- Some(play);
+                try buff_one who bS op x y
+                with | _ -> invalid_i ();
 
+            | _ -> invalid_i ();
+(* p2 turn *)
     end else
-    (* p2stuff *)
+        match play.ctype,play.effect.efftype with
+        | Spell,eff -> 
+            let mana_use () = pMana.current := !(pMana.current) - play.cost; in
+            match eff with begin
+            | None      -> mana_use ();
+            | Draw(b,x) -> mana_use ();
+                        draw_card bS x;
+            | AoeF(x,y) -> mana_use ();
+                        buff brd x y;
+            | AoeE(x,y) -> mana_use ();
+                        buff bS.pOneBoard x y;
+            | AoeA(x,y) -> mana_use ();
+                        buff brd x y;
+                        buff bS.pOneBoard x y;
+            | BType(ct,x,y) -> mana_use ();
+                        buff_type brd ct x y;
+            | BOne (x,y) -> 
+                try
+                    buff_one who bS op x y
+                with | _ -> invalid_i ()
+            end
+        | _ ,eff    ->
+            let mana_use () = pMana.current := !(pMana.current) - play.cost; in
+            match eff with
+            | None with ind <= 6 ->
+                mana_use (); brd.(ind) <- Some(play);
+            | Draw(b,x) with ind <= 6 ->
+                mana_use (); draw_card bS x; brd.(ind) <- Some(play);
+            | AoeF(x,y) with ind <= 6 ->
+                mana_use (); buff brd x y; brd.(ind) <- Some(play); 
+            | AoeE(x,y) with ind <= 6 ->
+                mana_use (); buff bS.pOneBoard x y; brd.(ind) <- Some(play);
+            | AoeA(x,y) with ind <= 6 ->
+                mana_use (); buff brd x y; buff bS.pOneBoard x y; 
+                brd.(ind) <- Some(play);
+            | BType(ct,x,y) with ind <= 6 ->
+                mana_use (); buff_type brd ct x y; brd.(ind) <- Some(play); 
+            | BOne (x,y) with ind <= 6 ->
+                mana_use (); brd.(ind) <- Some(play);
+                try
+                    buff_one who bS op x y
+                with | _ -> invalid_i ();
+
+            end
+            | _ -> invalid_i ();
 
 
 
