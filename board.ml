@@ -98,11 +98,53 @@ let indexOpening pBoard: int =
 	!count
 
 let printBoard boardState : unit =
-	todo kevin
-
+	let printBoard boardState : unit =
+    let pTurn = !boardState.turn mod 2 in
+    let chk = pTurn = 1 in
+    let plyr = if chk then boardState.pOneHero else boardState.pTwoHero in
+    let plyrHP = if chk then !boardState.pOneHP else !boardState.pTwoHP in
+    let plyrHand = if chk then !boardState.pOneHand else !boardState.pTwoHand in
+    let plyrB = if chk then boardState.pOneBoard else boardState.pTwoBoard in
+    let opp = if chk then boardState.pTwoHero else boardState.pOneHero in
+    let oppHP = if chk then !boardState.pTwoHP else !boardState.pOneHP in
+    let oppHand = if chk then !boardState.pTwoHand else !boardState.pOneHand in
+    let oppB = if chk then boardState.pTwoBoard else boardState.pOneBoard in
+    let heroPower = if !boardState.hUsed then "Unavailable" else "Available" in
+    let prntCard c i =
+        match c with
+        | None    -> ()
+        | Some(k) -> Printf.printf "(%i) %s" i (card_string k);
+    in
+    let prntArray a i =
+        prntCard a.(0) i;
+        prntCard a.(1) (i + 1);
+        prntCard a.(2) (i + 2);
+        prntCard a.(3) (i + 3);
+        prntCard a.(4) (i + 4);
+        prntCard a.(5) (i + 5);
+        prntCard a.(6) (i + 6);
+    in
+    let rec prntList l i =
+        match l with
+        | []   -> ()
+        | h::t -> Printf.printf "(%i) %s" i (card_string h);
+                  prntList t (i + 1);
+    in
+    Printf.printf "Enemy Hand: %i\n\n" (List.length oppHand);
+    Printf.printf "Enemy Hero: (%i)" (100 * (1 + pturn));
+    Printf.printf " %s\n" (hero_string opp);
+    Printf.printf "Enemy HP: %i\n" oppHP;
+    Printf.printf "Enemy Board:\n";
+    prntArray oppB 10;
+    Printf.printf "\nYour Board:\n";
+    prntArray plyrB 0;
+    Printf.printf "Your HP: %i\n" plyrHP;
+    Printf.printf "Your Hero: (%i)" (100 * (2 - pturn));
+    Printf.printf " %s\n" (hero_string plyr);
+    Printf.printf "Hero Power: %s\n" heroPower;
+    Printf.printf "\nYour Hand:\n";
+    prntList plyrHand 0
 (* resolve effect , return None if something went wrong*)
-let resolve_DR bS e: board option =
-
 let resolve_BC bS e : board option = 
 
 
