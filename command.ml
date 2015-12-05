@@ -10,7 +10,6 @@ type game_command =
 |HPow of int option
 |PCard of int
 |LookH
-|LookC of int
 |Concede
 |Help
 
@@ -60,11 +59,11 @@ let valid_attack str : bool =
   else false
 
 (*see if the command inputted is for playing a card*)
-let valid_pcard_or_lookc str : bool =
+let valid_pcard str : bool =
   let len  = String.length str in
   if(len > 5) then
     let cmd = String.sub str 0 5 in
-    if(cmd = "pcard" || cmd = "lookc") then
+    if(cmd = "pcard") then
       let num = String.trim (next_word str cmd) in
       try
         let _ = int_of_string num in true
@@ -98,7 +97,7 @@ let rec parse_game () =
   |"help" -> Help
   |"hpow" -> HPow None
   |s when (valid_attack str) -> do_attack str
-  |s when (valid_pcard_or_lookc str) -> do_pcard_or_lookc str
+  |s when (valid_pcard str) -> do_pcard str
   |s when (valid_hpow str) -> do_hpow str
   |_ -> Printf.printf "Invalid command\n"; parse_game ()
 
@@ -131,21 +130,18 @@ and do_attack str =
   else parse_game ()
 
 (*output the pcard command*)
-and do_pcard_or_lookc str =
+and do_pcard str =
   let len  = String.length str in
   if(len > 5) then
     let cmd = String.sub str 0 5 in
     let num = String.trim (next_word str cmd) in
-    if(cmd = "pcard" || cmd = "lookc") then
+    if(cmd = "pcard") then
       let bi =
         try
           let _ = int_of_string num in true
         with
         |x -> false in
-      if(bi) then
-        if(cmd = "pcard") then PCard (int_of_string num)
-        else if (cmd = "lookc") then LookC (int_of_string num)
-        else parse_game ()
+      if(bi) then PCard (int_of_string num)
       else parse_game ()
     else parse_game ()
   else parse_game ()
