@@ -20,3 +20,5 @@ type hero = {
 type hlist = hero array
 
 val hero_string : hero -> string
+
+val make_basic_heroes: unit -> hlist

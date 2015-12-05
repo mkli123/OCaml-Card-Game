@@ -77,3 +77,5 @@ val shuffle: deck -> deck
 val empty_card :unit -> card
 
 val card_string: card -> string
+
+val import_cardlist: string -> clist
