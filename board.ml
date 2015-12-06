@@ -572,6 +572,35 @@ let inputGameHelp () : unit =
 		game ends and your opponent wins.\n";
 	Printf.printf "Type help to... I think you know what typing help does."
 
+let actualGame (h1,d1) (h2,d2) m =
+    let init = makeBoard (h1,d1) (h2,d2) m in
+    inputEnd init;
+    let rec repl BS : board =
+        printBoard BS;
+        if (!BS.pOneHP) <= 0 then Printf.printf "Player 2 wins!"; exit 0;
+        else if (!BS.pTwoHP) <= 0 then Printf.printf "Player 1 wins!"; exit 0;
+        match BS.mode with
+        | PVP
+        | VSai(false) -> 
+            match parse_game () with
+            | Attack(x,y) -> inputAttack BS (x,y);
+                             repl BS;
+            | End         -> inputEnd BS;
+                             repl BS;
+            | HPow(x)     -> inputHPow BS x;
+                             repl BS;
+            | PCard(x,y)  -> inputPCard BS (x,y);
+                             repl BS;
+            | LookH       -> inputLookH BS;
+                             repl BS;
+            | Concede     -> inputConcede BS;
+                             repl BS;
+            | Help        -> inputGameHelp ();
+                             repl BS;
+        | VSai(true) -> failwith "todo"
+    in
+    repl init;
+
 
 let menu cardlist herolist deck1 deck2 pvp=
 let user_input = parse_menu() in
@@ -585,10 +614,4 @@ match user_input with
          Printf.printf "Type Start to play with predefined decks.\n";
          Printf.printf "Type Exit to quit the game. \n"
 
-let actualGame (h1,d1) (h2,d2) m =
-	let init = makeBoard (h1,d1) (h2,d2) m in
-	let rec repl boardState : board =
-		match boardState.mode with
-		| PVP -> 
-	in
 
