@@ -1,8 +1,8 @@
-open deck
-open hero
-open ai
-open draft
-open command
+open Deck
+open Hero
+(* open Ai
+ *)open Draft
+open Command
 
 (* keep track of current mana available to player at a given time
  * max is the mana you start with next turn
@@ -13,7 +13,7 @@ type mana  = {
 }
 
 (* mode defines whether or not it is player vs player or player vs ai *)
-type mode   = |VSai |PVP
+type mode   = |VSai of bool |PVP
 
 (* board keeps track of all the different aspects of the game at the current
  * state.
@@ -34,7 +34,7 @@ type board = {
 	pOneHP    : int ref;
 	pTwoHP    : int ref;
 	pOneHand  : card list ref;
-	pTwoHand  : card list ref;	
+	pTwoHand  : card list ref;
 	pOneBoard : card list ref;
 	pTwoBoard : card list ref;
 	pOneDeck  : deck ref;
@@ -45,11 +45,11 @@ type board = {
 	turn      : int ref;
 }
 
-(* [makeBoard] takes in the two hero deck tuples and creates the 
+(* [makeBoard] takes in the two hero deck tuples and creates the
  * starting board state
  *)
 val makeBoard      : (hero * deck) -> (hero * deck) -> mode -> board
 
 (* [actualGame] acts as a main funciton that starts the command parsing
  *)
-val actualGame     : Unit -> Unit
+val actualGame    : unit -> unit
