@@ -35,8 +35,8 @@ type board = {
 	pTwoHP    : int ref;
 	pOneHand  : card list ref;
 	pTwoHand  : card list ref;
-	pOneBoard : card list ref;
-	pTwoBoard : card list ref;
+	pOneBoard : card option array;
+	pTwoBoard : card option array;
 	pOneDeck  : deck ref;
 	pTwoDeck  : deck ref;
 	hUsed     : bool ref;
@@ -52,4 +52,6 @@ val makeBoard      : (hero * deck) -> (hero * deck) -> mode -> board
 
 (* [actualGame] acts as a main funciton that starts the command parsing
  *)
-val actualGame    : unit -> unit
+val actualGame    : (hero * deck)-> (hero * deck) -> mode -> unit
+
+val menu : card array -> hero array -> (hero * deck)-> (hero * deck) -> mode -> unit
