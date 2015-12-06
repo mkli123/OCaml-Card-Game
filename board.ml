@@ -1,6 +1,5 @@
 open Deck
 open Hero
-(* open Ai *)
 open Draft
 open Command
 
@@ -28,7 +27,7 @@ type mode   = |VSai of bool |PVP
  * turn is 0 or 1 depending on who's player's turn it is
  *)
 type board = {
-    mode      : mode;
+    mode      : mode ref;
     pOneHero  : hero;
     pTwoHero  : hero;
     pOneHP    : int ref;
@@ -47,6 +46,7 @@ type board = {
 
 
 (* ******************************************************************** *)
+
 
 let (>>=) v f =
   match v with
@@ -76,7 +76,7 @@ let makeBoard (h1,d1) (h2,d2) m =
     let pOneD = if rand then ref d1 else ref d2 in
     let pTwoD = if rand then ref d2 else ref d1 in
     {
-    mode      = m;
+    mode      = ref m;
     pOneHero  = if rand then h1 else h2;
     pTwoHero  = if rand then h2 else h1;
     pOneHP    = ref 30;
@@ -130,6 +130,7 @@ let printBoard bS : unit =
     let plyrHP = if chk then !(bS.pOneHP) else !(bS.pTwoHP) in
     let plyrHand = if chk then !(bS.pOneHand) else !(bS.pTwoHand) in
     let plyrB = if chk then bS.pOneBoard else bS.pTwoBoard in
+    let plyrMana = if chk then !(bS.pOneMana.current) else !(bS.pTwoMana.current) in
     let opp = if chk then bS.pTwoHero else bS.pOneHero in
     let oppHP = if chk then !(bS.pTwoHP) else !(bS.pOneHP) in
     let oppHand = if chk then !(bS.pTwoHand) else !(bS.pOneHand) in
@@ -168,7 +169,8 @@ let printBoard bS : unit =
     Printf.printf " %s\n" (hero_string plyr);
     Printf.printf "Hero Power: %s\n" heroPower;
     Printf.printf "\nYour Hand:\n";
-    prntList plyrHand 0
+    prntList plyrHand 0;
+    Printf.printf "Your Mana: %i\n" plyrMana
 
 (* returns array with stealth minions removed*)
 let rm_stealth (brd: card option array) =
@@ -265,7 +267,9 @@ let inputEnd bS : unit =
     let chk = pTurn = 1 in
     let plyrMana = if chk then bS.pOneMana else bS.pTwoMana in
     if (!(plyrMana.max)) < 10 then plyrMana.max := (!(plyrMana.max)) + 1;
-    plyrMana.current := !(plyrMana.max)
+    plyrMana.current := !(plyrMana.max);
+    if !(bS.mode) = VSai(true) then bS.mode := VSai(false)
+    else if !(bS.mode) = VSai(false) then( bS.mode := VSai(true))
 
 let foption (c:card option) =
   match c with
@@ -281,25 +285,25 @@ let inputHPow boardState input : unit =
         boardState.pTwoMana.current
         else
         boardState.pOneMana.current in
-        if !mana <= 0 then Printf.printf "You don't have enough mana.\n"
+        if !mana <= 1 then Printf.printf "You don't have enough mana.\n"
         else
             let player = if (!(boardState.turn) mod 2) = 0 then
             boardState.pTwoHero.power else boardState.pOneHero.power in
             let moded = (!(boardState.turn) mod 2) in
             match player,input with
-            |Mage,Some x -> if x = 100 then (if moded = 0 then( boardState.pTwoHP:=(!(boardState.pTwoHP)-1);boardState.pTwoMana.current:=
-                                (!(boardState.pTwoMana.current)-2) )else boardState.pOneHP:=(!(boardState.pOneHP)-1);boardState.pOneMana.current:=
+            |Mage,Some x -> if x = 100 then (if moded = 0 then( boardState.hUsed:=true; boardState.pTwoHP:=(!(boardState.pTwoHP)-1);boardState.pTwoMana.current:=
+                                (!(boardState.pTwoMana.current)-2) )else boardState.hUsed:=true;boardState.pOneHP:=(!(boardState.pOneHP)-1);boardState.pOneMana.current:=
                                 (!(boardState.pOneMana.current)-2)) else if x>=0 && x<7 then( let brd = (if moded = 0 then boardState.pTwoBoard else boardState.pOneBoard) in
                                 let no_stealth = rm_stealth brd in (if no_stealth.(x) = None then
-                                        Printf.printf "That's an invalid Target. \n" else (if !((foption brd.(x)).hp)-1 = 0 then brd.(x)<-None else (foption brd.(x)).hp:= (!((foption brd.(x)).hp) - 1));
+                                        Printf.printf "That's an invalid Target. \n" else (boardState.hUsed:=true;if !((foption brd.(x)).hp)-1 = 0 then brd.(x)<-None else (foption brd.(x)).hp:= (!((foption brd.(x)).hp) - 1));
                                         (if moded = 0 then boardState.pTwoMana.current:=(!(boardState.pTwoMana.current)-2) else
                                             boardState.pOneMana.current:=(!(boardState.pOneMana.current)-2))))
                                 else if x>=10 && x<17 then ( let brd = (if moded = 0 then boardState.pOneBoard else boardState.pTwoBoard) in
                                 let no_stealth = rm_stealth brd in (if no_stealth.(x-10) = None then
-                                        Printf.printf "That's an invalid Target. \n" else (if !((foption brd.(x-10)).hp)-1 = 0 then brd.(x-10)<-None else (foption brd.(x-10)).hp:= (!((foption brd.(x-10)).hp) - 1));
+                                        Printf.printf "That's an invalid Target. \n" else (boardState.hUsed:=true;if !((foption brd.(x-10)).hp)-1 = 0 then brd.(x-10)<-None else (foption brd.(x-10)).hp:= (!((foption brd.(x-10)).hp) - 1));
                                         (if moded = 0 then boardState.pTwoMana.current:=(!(boardState.pTwoMana.current)-2) else
                                             boardState.pOneMana.current:=(!(boardState.pOneMana.current)-2))))
-                                else if x = 200 then (if moded = 0 then( boardState.pOneHP:=(!(boardState.pOneHP)-1);boardState.pTwoMana.current:=
+                                else if x = 200 then (boardState.hUsed:=true; if moded = 0 then( boardState.pOneHP:=(!(boardState.pOneHP)-1);boardState.pTwoMana.current:=
                                 (!(boardState.pTwoMana.current)-2) )else boardState.pTwoHP:=(!(boardState.pTwoHP)-1);boardState.pOneMana.current:=
                                 (!(boardState.pOneMana.current)-2)) else Printf.printf "Invalid Target.\n"
             |Paladin, _ -> let index = indexOpening (if moded=0 then boardState.pTwoBoard else boardState.pOneBoard) in
@@ -315,27 +319,30 @@ let inputHPow boardState input : unit =
                             stealth = ref false;
                             taunt   = false;
                             ctype   = Zerg;} in
+                            boardState.hUsed:=true;
                             if (!(boardState.turn) mod 2) = 0 then(
                             boardState.pTwoBoard.(index) <- Some(new_card);
                             boardState.pTwoMana.current:=
                                 (!(boardState.pTwoMana.current)-2))
-                            else( boardState.pOneBoard.(index) <- Some(new_card))
-            |Priest, Some x -> if x = 100 then (if moded = 0 then( boardState.pTwoHP:=(!(boardState.pTwoHP)+2);boardState.pTwoMana.current:=
+                            else( boardState.pOneBoard.(index) <- Some(new_card);
+                          boardState.pOneMana.current:=
+                                (!(boardState.pOneMana.current)-2))
+            |Priest, Some x -> if x = 100 then ( boardState.hUsed:=true; if moded = 0 then( boardState.pTwoHP:=(!(boardState.pTwoHP)+2);boardState.pTwoMana.current:=
                                 (!(boardState.pTwoMana.current)-2) )else boardState.pOneHP:=(!(boardState.pOneHP)+2);boardState.pOneMana.current:=
                                 (!(boardState.pOneMana.current)-2)) else if x>=0 && x<7 then( let brd = (if moded = 0 then boardState.pTwoBoard else boardState.pOneBoard) in
                                 let no_stealth = rm_stealth brd in (if no_stealth.(x) = None then
                                         Printf.printf "That's an invalid Target. \n" else (foption brd.(x)).hp:= (!((foption brd.(x)).hp) + 2));
-                                        (if moded = 0 then( boardState.pTwoMana.current:=((!(boardState.pTwoMana.current))-2) )else(
+                                        ( boardState.hUsed:=true; if moded = 0 then( boardState.pTwoMana.current:=((!(boardState.pTwoMana.current))-2) )else(
                                             boardState.pOneMana.current:=((!(boardState.pOneMana.current))-2))))
                                 else if x>=10 && x<17 then ( let brd = (if moded = 0 then boardState.pOneBoard else boardState.pTwoBoard) in
                                 let no_stealth = rm_stealth brd in (if no_stealth.(x-10) = None then
                                         Printf.printf "That's an invalid Target. \n" else (foption brd.(x-10)).hp:= (!((foption brd.(x-10)).hp) + 2));
-                                        (if moded = 0 then( boardState.pTwoMana.current:=(!(boardState.pTwoMana.current)-2) )else(
+                                        ( boardState.hUsed:=true; if moded = 0 then( boardState.pTwoMana.current:=(!(boardState.pTwoMana.current)-2) )else(
                                             boardState.pOneMana.current:=(!(boardState.pOneMana.current)-2))))
-                                else if x = 200 then (if moded = 0 then( boardState.pOneHP:=(!(boardState.pOneHP)+2);boardState.pTwoMana.current:=
+                                else if x = 200 then ( boardState.hUsed:=true; if moded = 0 then( boardState.pOneHP:=(!(boardState.pOneHP)+2);boardState.pTwoMana.current:=
                                 (!(boardState.pTwoMana.current)-2) )else boardState.pTwoHP:=(!(boardState.pTwoHP)+2);boardState.pOneMana.current:=
                                 (!(boardState.pOneMana.current)-2)) else Printf.printf "Invalid Target.\n"
-            |Warlock, _ -> draw_card boardState 1; (if moded = 0 then( boardState.pTwoHP:=(!(boardState.pTwoHP)-2);boardState.pTwoMana.current:=
+            |Warlock, _ -> draw_card boardState 1; ( boardState.hUsed:=true; if moded = 0 then( boardState.pTwoHP:=(!(boardState.pTwoHP)-2);boardState.pTwoMana.current:=
                                 (!(boardState.pTwoMana.current)-2) )else( boardState.pOneHP:=(!(boardState.pOneHP)-2);boardState.pOneMana.current:=
                                 (!(boardState.pOneMana.current)-2)))
             |_,_ -> Printf.printf "Invalid Hpow command.\n"
@@ -344,14 +351,14 @@ let inputHPow boardState input : unit =
 (* takes in [ind] index of card you want, [lst] hand you draw from
     acc is the start index
     returns: (card,newhand)*)
-let rec get_crd ind lst acc =
-    match lst with
+let rec get_crd ind l lst acc =
+    match l with
     | _ when acc > 10    -> (empty_card (),[])
     | c::t when ind = acc ->
-        let fil x = c <> x in
+        let fil x = not(c = x) in
         (c,List.filter fil lst)
-    | h::t                -> get_crd ind lst (acc + 1)
-    |_ -> (empty_card (),[])
+    | h::t                -> get_crd (ind ) t lst (acc + 1)
+    | _    -> (empty_card (), [empty_card ()])
 
 (* Applies buff of h and a to input board which is card array *)
 let buff (brd: card option array) h a =
@@ -528,13 +535,14 @@ let inputPCard bS (x,op) : unit =
     let temp_hand = !hnd in
     let pMana = if who then bS.pOneMana else bS.pTwoMana in
     if x >= List.length (!hnd) then invalid_i () else
-    let new_hand = get_crd x temp_hand 0 in
+    let new_hand = get_crd x temp_hand temp_hand 0 in
     let play = fst new_hand in
     if play.cost > !(pMana.current) then invalid_i () else
     if who then
         match play.ctype,play.effect.efftype with
         | Spell,eff ->
-            let mana_use () = pMana.current := !(pMana.current) - play.cost in(
+            let mana_use () = pMana.current := !(pMana.current) - play.cost;
+            bS.pOneHand := snd new_hand in(
             match eff with
             | None      -> mana_use ();
             | Draw(x) -> mana_use ();
@@ -554,7 +562,8 @@ let inputPCard bS (x,op) : unit =
                 with | _ -> invalid_i ())
 
         | _ ,eff    ->
-            let mana_use () = pMana.current := !(pMana.current) - play.cost; in
+            let mana_use () = pMana.current := !(pMana.current) - play.cost;
+            bS.pOneHand := snd new_hand  in
             (match eff with
             | None when ind <= 6 ->
                 mana_use (); brd.(ind) <- Some(play);
@@ -580,7 +589,8 @@ let inputPCard bS (x,op) : unit =
      else
         match play.ctype,play.effect.efftype with
         | Spell,eff ->
-            let mana_use () = pMana.current := !(pMana.current) - play.cost; in
+            let mana_use () = pMana.current := !(pMana.current) - play.cost;
+            bS.pTwoHand := snd new_hand  in
             begin match eff with
             | None      -> mana_use ();
             | Draw(x) -> mana_use ();
@@ -600,7 +610,8 @@ let inputPCard bS (x,op) : unit =
                 with | _ -> invalid_i ()
             end
         | _ ,eff    ->
-            let mana_use () = pMana.current := !(pMana.current) - play.cost in
+            let mana_use () = pMana.current := !(pMana.current) - play.cost;
+            bS.pTwoHand := snd new_hand  in
             match eff with
             | None when ind <= 6 ->
                 mana_use (); brd.(ind) <- Some(play)
@@ -637,7 +648,7 @@ let inputLookH boardState : unit =
 let inputConcede boardState : unit =
 	let player = !(boardState.turn) mod 2 in
 	let playernum = if player = 0 then "Player 1" else "Player 2" in
-	Printf.printf "%s Wins!" playernum; exit 0
+	Printf.printf "%s Wins!\n" playernum; exit 0
 
 let inputGameHelp () : unit =
 	Printf.printf "Type attack # # where the first # is
@@ -650,17 +661,46 @@ let inputGameHelp () : unit =
 	Printf.printf "Type lookh to see your hand.\n";
 	Printf.printf "Type concede to give up! The
 		game ends and your opponent wins.\n";
-	Printf.printf "Type help to... I think you know what typing help does."
+	Printf.printf "Type help to... I think you know what typing help does.\n"
+
+(* Given a board state, produce a string as an output that can be utilized as
+the player command that would be utilized in order to execute the action
+dictated by the AI algorithm. *)
+let makeTurn bS =
+    let pTurn = ((!(bS.turn)) mod 2) in
+    for i = 0 to 6 do
+        inputAttack bS (i,(100 * (1 + pTurn)))
+    done;
+    for j = 0 to 9 do
+        inputPCard bS (j,None)
+    done;
+    inputHPow bS None;
+    inputEnd bS
+
+
+(* Generates a deck of cards using the same method as the method described for a
+player draft. The AI is given the coice between three cards. It chooses one of
+the three to add to its deck. This process is repeated until the deck is
+completed. The resulting deck is then returned. *)
+let aiDraft heros cards =
+    let h = Random.int (Array.length heros) in
+    let hero = heros.(h) in
+    let d = ref [] in
+    for i = 0 to 29 do
+    let (y,_,_) = get_rand_card cards in
+        d := (y)::(!d);
+    done;
+    (hero,(!d))
 
 let actualGame (h1,d1) (h2,d2) m =
-    let init = makeBoard (h1,d1) (h2,d2) m in
+    let init = makeBoard (h1,d1) (h2,d2) !m in
 
     let _ = inputEnd init in
     let rec repl bS : unit =
         printBoard bS;
         if (!(bS.pOneHP)) <= 0 then( Printf.printf "Player 2 wins!"; exit 0)
         else if (!(bS.pTwoHP)) <= 0 then( Printf.printf "Player 1 wins!"; exit 0);
-        match bS.mode with
+        (match !(bS.mode) with
         | PVP
         | VSai(false) ->(
             match parse_game () with
@@ -678,18 +718,18 @@ let actualGame (h1,d1) (h2,d2) m =
                              repl bS
             | Help        -> inputGameHelp ();
                              repl bS)
-        | VSai(true) -> failwith "todo"
+        | VSai(true) -> ((makeTurn bS); repl bS))
     in
     repl init
 
 
 let rec menu cardlist herolist deck1 deck2 pvp=
-let user_input = parse_menu() in
+let user_input = Printf.printf "You're at the menu. Type a command.\n"; parse_menu() in
 match user_input with
-|Draft ->(*  if pvp=PVP then *)( Printf.printf "Player 1 will Draft now.\n"; let d1 = build_deck 30 herolist cardlist in
-            Printf.printf "Player 2 will Draft now.\n"; let d2 = build_deck 30 herolist cardlist in Printf.printf "Have Fun! \n"; actualGame d1 d2 pvp)
-(*         else (Printf.printf "You will now Draft.\n"; let d1 = build_deck 30 herolist cardlist in let d2 = aiDraft herolist cardlist in actualGame d1 d2 pvp) *)
-|Start -> actualGame deck1 deck2 pvp
+|Draft -> if pvp=PVP then( Printf.printf "Player 1 will Draft now.\n"; let d1 = build_deck 30 herolist cardlist in
+            Printf.printf "Player 2 will Draft now.\n"; let d2 = build_deck 30 herolist cardlist in Printf.printf "Have Fun! \n"; actualGame d1 d2 (ref pvp))
+        else (Printf.printf "You will now Draft.\n"; let d1 = build_deck 30 herolist cardlist in let d2 = aiDraft herolist cardlist in actualGame d1 d2 (ref pvp))
+|Start -> actualGame deck1 deck2 (ref pvp)
 |Exit -> Printf.printf "Thanks for playing! \n";exit 0
 |Help ->( Printf.printf "Type Draft to initiate a draft.\n";
          Printf.printf "Type Start to play with predefined decks.\n";

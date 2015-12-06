@@ -73,7 +73,8 @@ let split s =
     Core.Std.String.split s ' '
 (* get_ctype s extracts card type from the string value *)
 let get_ctype s =
-    match s with
+    let st = String.lowercase s in
+    match st with
     | "protoss" -> Protoss
     | "zerg"    -> Zerg
     | "terran"  -> Terran

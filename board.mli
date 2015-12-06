@@ -1,7 +1,6 @@
 open Deck
 open Hero
-(* open Ai
- *)open Draft
+open Draft
 open Command
 
 (* keep track of current mana available to player at a given time
@@ -28,7 +27,7 @@ type mode   = |VSai of bool |PVP
  * turn is 0 or 1 depending on who's player's turn it is
  *)
 type board = {
-	mode      : mode;
+	mode      : mode ref;
 	pOneHero  : hero;
 	pTwoHero  : hero;
 	pOneHP    : int ref;
@@ -52,6 +51,6 @@ val makeBoard      : (hero * deck) -> (hero * deck) -> mode -> board
 
 (* [actualGame] acts as a main funciton that starts the command parsing
  *)
-val actualGame    : (hero * deck)-> (hero * deck) -> mode -> unit
+val actualGame    : (hero * deck)-> (hero * deck) -> mode ref-> unit
 
 val menu : card array -> hero array -> (hero * deck)-> (hero * deck) -> mode -> unit
